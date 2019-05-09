@@ -1,0 +1,73 @@
+inherit_from: .rubocop_todo.yml
+
+AllCops:
+  TargetRubyVersion: 2.3
+
+Style/StringLiterals:
+  Enabled: true
+
+Style/CollectionMethods:
+  Enabled: true
+
+Style/FrozenStringLiteralComment:
+  Enabled: true
+  Exclude:
+    - 'bin/*'
+
+Metrics/ClassLength:
+  Exclude:
+    - 'test/**/*'
+
+Performance/Casecmp:
+  Enabled: true
+
+Performance/RedundantMatch:
+  Enabled: true
+
+Performance/RedundantMerge:
+  Enabled: true
+
+Style/WordArray:
+  Enabled: true
+
+Style/AndOr:
+  EnforcedStyle: conditionals
+
+Style/TernaryParentheses:
+  Enabled: false
+
+Style/InverseMethods:
+  Enabled: true
+
+Layout/FirstParameterIndentation:
+  EnforcedStyle: consistent
+
+Bundler/OrderedGems:
+  Enabled: true
+
+Style/Alias:
+  EnforcedStyle: prefer_alias_method
+
+Layout/DotPosition:
+  Enabled: false
+
+Style/ParenthesesAroundCondition:
+  Enabled: true
+
+Layout/AlignHash:
+  Enabled: true
+
+Layout/AlignParameters:
+  Enabled: true
+
+Style/LineEndConcatenation:
+  Enabled: true
+
+Style/ParallelAssignment:
+  Enabled: false
+
+Style/PreferredHashMethods:
+  Enabled: true
+
+Style/MultilineBlockChain:
+  Enabled: false
