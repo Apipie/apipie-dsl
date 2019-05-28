@@ -206,7 +206,12 @@ module ApipieDSL
 
     def reload_documentation
       dsl_classes_paths.each do |file|
-        load(file)
+        begin
+          load file
+        rescue StandardError
+          # Some constant the file uses may not be defined
+          # before it's loaded
+        end
       end
     end
 
