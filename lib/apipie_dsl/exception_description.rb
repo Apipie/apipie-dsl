@@ -11,7 +11,7 @@ module ApipieDSL
 
     def initialize(error_or_options, desc = nil, options = {})
       if error_or_options.is_a?(Hash)
-        error_or_options.transform_keys!(&:to_sym)
+        error_or_options = error_or_options.transform_keys(&:to_sym)
         @error = error_or_options[:error]
         @metadata = error_or_options[:meta]
         @description = error_or_options[:desc] || error_or_options[:description]
