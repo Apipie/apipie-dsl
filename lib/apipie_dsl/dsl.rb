@@ -195,13 +195,9 @@ module ApipieDSL
       options[:scope] ||= default_param_group_scope
       descriptor = options[:param_group] || options[:array_of] || options[:object_of]
 
-      if block.nil?
-        if descriptor.is_a?(Symbol)
-          block = ApipieDSL.get_param_group(options[:scope], descriptor) if descriptor
-        end
-      elsif descriptor
-        raise ArgumentError, 'Cannot specify both block and param_group'
-      end
+      raise ArgumentError, 'Cannot specify both block and param_group' if descriptor && block
+
+      block = ApipieDSL.get_param_group(options[:scope], descriptor) if descriptor&.is_a?(Symbol)
 
       dsl_data[:returns] = [options, block]
     end
