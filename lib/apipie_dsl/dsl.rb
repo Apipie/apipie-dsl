@@ -310,7 +310,11 @@ module ApipieDSL
       def self.update_method_desc(method_desc, dsl_data)
         method_desc.full_description = dsl_data[:description] || method_desc.full_description
         method_desc.short_description = dsl_data[:short_description] || method_desc.short_description
-        method_desc.metadata&.merge(dsl_data[:meta]) if dsl_data[:meta]&.is_a?(Hash)
+        if dsl_data[:meta]&.is_a?(Hash)
+          method_desc.metadata&.merge!(dsl_data[:meta])
+        else
+          method_desc.metadata = dsl_data[:meta]
+        end
         method_desc.show = dsl_data[:show]
         method_desc.raises += dsl_data[:raises].map do |args|
           ApipieDSL::ExceptionDescription.from_dsl_data(args)
