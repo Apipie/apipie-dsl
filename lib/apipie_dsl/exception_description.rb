@@ -31,7 +31,7 @@ module ApipieDSL
     def to_hash
       {
         error: error,
-        description: description,
+        description: ApipieDSL.markup_to_html(description),
         metadata: metadata
       }
     end

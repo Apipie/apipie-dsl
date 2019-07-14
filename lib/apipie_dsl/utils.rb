@@ -23,11 +23,11 @@ module ApipieDSL
     end
 
     def request_script_name
-      Thread.current[:apipie_req_script_name] || ''
+      Thread.current[:apipie_dsl_req_script_name] || ''
     end
 
     def request_script_name=(script_name)
-      Thread.current[:apipie_req_script_name] = script_name
+      Thread.current[:apipie_dsl_req_script_name] = script_name
     end
 
     def full_url(path)
@@ -40,6 +40,23 @@ module ApipieDSL
       ret.insert(0, '/') unless ret =~ %r{\A[./]}
       ret.sub!(%r{/*\Z}, '')
       ret
+    end
+
+    def include_javascripts
+      %w[bundled/jquery.js
+         bundled/bootstrap-collapse.js
+         bundled/prettify.js
+         apipie_dsl.js ].map do |file|
+        "<script type='text/javascript' src='#{ApipieDSL.full_url("javascripts/#{file}")}'></script>"
+      end.join("\n").html_safe
+    end
+
+    def include_stylesheets
+      %w[bundled/bootstrap.min.css
+         bundled/prettify.css
+         bundled/bootstrap-responsive.min.css ].map do |file|
+        "<link type='text/css' rel='stylesheet' href='#{ApipieDSL.full_url("stylesheets/#{file}")}'/>"
+      end.join("\n").html_safe
     end
   end
 end

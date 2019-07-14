@@ -1,0 +1,19 @@
+<ul>
+  <% params.each do |param| %>
+    <% if !param[:show] %>
+      <%= render(:partial => 'params_plain', :locals => {:params => param[:params]}) unless param[:params].blank? %>
+      <% next %>
+    <% end %>
+    <li>
+      <strong><%= param[:name] %> </strong>:
+      <small>
+        <%= t("apipie.#{param[:type]}") %>
+        <% if param[:validator] %>
+          [ <%= ApipieDSL.markup_to_html(param[:validator]).html_safe %> ]
+        <% end %>
+      </small>
+      <%= param[:description].html_safe %>
+    </li>
+    <%= render(:partial => 'params_plain', :locals => {:params => param[:params]}) unless param[:params].blank? %>
+  <% end %>
+</ul>

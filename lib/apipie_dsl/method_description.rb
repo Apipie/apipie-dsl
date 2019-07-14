@@ -2,7 +2,7 @@
 
 module ApipieDSL
   class MethodDescription
-    attr_reader :name, :klass, :see
+    attr_reader :name, :klass, :see, :examples
     attr_accessor :full_description, :short_description, :metadata, :show,
                   :raises, :returns
     alias_method :class_description, :klass
@@ -14,8 +14,7 @@ module ApipieDSL
       desc = dsl_data[:description] || ''
       @full_description = ApipieDSL.markup_to_html(desc)
 
-      short = dsl_data[:short_description] || ''
-      @short_description = ApipieDSL.markup_to_html(short)
+      @short_description = dsl_data[:short_description] || ''
 
       @params = dsl_data[:params].map do |args|
         ApipieDSL::ParameterDescription.from_dsl_data(self, args)
@@ -41,6 +40,8 @@ module ApipieDSL
       @metadata = dsl_data[:meta]
 
       @show = dsl_data[:show]
+
+      @examples = dsl_data[:examples]
     end
 
     def id
@@ -75,7 +76,7 @@ module ApipieDSL
       crumbs << @klass.version if ApipieDSL.configuration.version_in_url
       crumbs << @klass.id
       crumbs << @name
-      ApipieDSL.full_url(crumbs.join('/'))
+      ApipieDSL.full_url(crumbs.join('/')).gsub('?', '%3F')
     end
 
     def to_hash(lang = nil)
@@ -89,7 +90,8 @@ module ApipieDSL
         returns: @returns.to_hash(lang),
         metadata: @metadata,
         see: see.map(&:to_hash),
-        show: @show
+        show: @show,
+        examples: @examples,
       }
     end
   end

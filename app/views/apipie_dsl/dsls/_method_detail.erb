@@ -1,0 +1,51 @@
+<%= raw method[:full_description] %>
+
+<% unless method[:raises].blank? %>
+  <%= heading(t('apipie_dsl.raises'), h_level) %>
+  <%= render(:partial => 'raises', :locals => {:raises => method[:raises]}) %>
+<% end %>
+
+<% unless method[:metadata].blank? %>
+  <%= heading(t('apipie_dsl.metadata'), h_level) %>
+  <%= render(:partial => 'metadata', :locals => {:meta => method[:metadata]}) %>
+<% end %>
+
+<% unless method[:examples].blank? %>
+  <%= heading(t('apipie_dsl.examples'), h_level) %>
+  <% method[:examples].each do |example| %>
+    <pre class="prettyprint"><%= example %></pre>
+  <% end %>
+<% end %>
+
+<% unless method[:params].blank? %>
+  <%= heading(t('apipie_dsl.params'), h_level) %>
+  <table class='table'>
+    <thead>
+      <tr>
+        <th><%= t('apipie_dsl.param_name') %></th>
+        <th><%= t('apipie_dsl.description') %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <%= render(:partial => 'params', :locals => {:params => method[:params]}) %>
+    </tbody>
+  </table>
+<% end %>
+<% unless method[:returns].blank? %>
+  <%= heading(t('apipie_dsl.returns'), h_level) %>
+  <% if method[:returns][:description] %>
+    <%= heading("#{t('apipie_dsl.description')}:", h_level + 1) %>
+    <p><%= method[:returns][:description] %></p>
+  <% end %>
+  <table class='table'>
+    <thead>
+      <tr>
+        <th><%= t("apipie_dsl.#{method[:returns][:object][:class]}") %></th>
+        <th><%= t("apipie_dsl.details") %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <%= render(:partial => 'returns', :locals => {:return_object => method[:returns][:object]}) %>
+    </tbody>
+  </table>
+<% end %>

@@ -1,0 +1,65 @@
+<% @doc[:classes].sort_by(&:first).each do |key, klass| %>
+  <h4><a href='#<%= key %>'><%= klass[:name] %></a></h4>
+  <ul>
+    <% klass[:methods].each do |method| %>
+      <% if !method[:show] %>
+        <% next %>
+      <% end %>
+      <li><a href='#<%= key %>-<%= method[:name] %>'><%= method[:name] %></a></li>
+    <% end %>
+  </ul>
+<% end %>
+
+<% @doc[:classes].sort_by(&:first).each do |key, klass| %>
+
+  <hr/>
+
+  <div>
+    <h2 id="<%= key %>">
+      <a href='#<%= key %>'><%= klass[:name] %></a><br>
+      <small><%= raw klass[:short_description] %></small>
+    </h2>
+  </div>
+
+  <% unless klass[:full_description].blank? %>
+    <div><%= raw klass[:full_description] %></div>
+  <% end %>
+
+  <div>
+    <% klass[:methods].each do |method| %>
+      <% if !method[:show] %>
+        <% next %>
+      <% end %>
+      <hr/>
+
+      <h3 id="<%= "#{key}-#{method[:name]}" %>">
+      <a href='#<%= key %>'><%= klass[:name] %></a> / <a href='#<%= "#{key}-#{method[:name]}" %>'><%= method[:name] %></a>
+      </h3>
+
+      <div>
+        <%= raw method[:full_description] %>
+        <% unless method[:examples].blank? %>
+          <h4><%= t('apipie_dsl.examples') %></h4>
+          <% method[:examples].each do |example| %>
+            <pre class="wiki"><%= example %></pre>
+          <% end %>
+        <% end %>
+
+        <% unless method[:raises].blank? %>
+          <h4><%= t('apipie_dsl.raises') %></h4>
+          <% method[:raises].each do |err| %>
+            <%= err[:code] %>
+            <%= err[:description] %>
+            <%= render(:partial => 'metadata', :locals => {:meta => err[:metadata]}) %>
+            <br>
+          <% end %>
+        <% end %>
+
+        <% unless method[:params].blank? %>
+          <h4><%= t('apipie_dsl.params') %></h4>
+          <%= render(:partial => 'params_plain', :locals => {:params => method[:params]}) %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+<% end %>

@@ -47,7 +47,7 @@ module ApipieDSL
 
       @method_description = method_description
       @name = name
-      @desc = ApipieDSL.markup_to_html(@options[:desc])
+      @desc = @options[:desc]
       @type = @options[:type] || :required
       @default_value = @options[:default]
       @parent = @options[:parent]
@@ -119,10 +119,15 @@ module ApipieDSL
     end
 
     def to_hash(lang = nil)
+      description = if type == :property
+                      desc
+                    else
+                      ApipieDSL.markup_to_html(ApipieDSL.translate(@options[:desc], lang))
+                    end
       hash = {
         name: name.to_s,
         full_name: full_name,
-        description: ApipieDSL.markup_to_html(ApipieDSL.translate(@options[:desc], lang)),
+        description: description,
         type: type.to_s,
         default: default_value,
         validator: validator.to_s,

@@ -1,0 +1,82 @@
+<ul class='breadcrumb'>
+  <li class='active'><a href='<%= @doc[:doc_url] %><%= @doc[:link_extension] %>'><%= @doc[:name] %> <%= @doc[:classes].values.first && @doc[:classes].values.first[:version] %></a></li>
+  <%= render(:partial => 'languages', :locals => {:doc_url => @doc[:doc_url]}) %>
+  <% if @versions && @versions.size > 1 %>
+  <li class='pull-right'>
+    <%= @versions.collect { |v| link_to v, ApipieDSL.full_url(v+@doc[:link_extension]) }.join(' / ').html_safe %>
+  </li>
+  <% end %>
+</ul>
+
+<div><%= raw @doc[:info] %></div>
+
+<h1 class='page-header'><%= t('apipie_dsl.classes') %></h1>
+
+<% @doc[:classes].sort_by(&:first).each do |key, dsl| %>
+  <h2>
+    <a href='<%= dsl[:doc_url] %><%= @doc[:link_extension] %>'>
+      <%= dsl[:name] %>
+    </a>
+    <% if dsl[:deprecated] %>
+        <code>DEPRECATED</code>
+    <% end %>
+    <br>
+    <small><%= dsl[:short_description] %></small>
+  </h2>
+  <% unless dsl[:properties].empty? %>
+    <table class='table'>
+      <thead>
+        <tr>
+          <th><%= t('apipie_dsl.property') %></th>
+          <th><%= t('apipie_dsl.description') %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% dsl[:properties].each do |prop| %>
+          <% if !prop[:show] %>
+            <% next %>
+          <% end %>
+          <tr>
+            <td>
+              <a href='#'><%= prop[:name] %></a>
+              <% if prop[:deprecated] %>
+                <code>DEPRECATED</code>
+              <% end %>
+            </td>
+            <td width='60%'><%= prop[:description] %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% end %>
+  <% unless dsl[:methods].empty? %>
+    <table class='table'>
+      <thead>
+        <tr>
+          <th><%= t('apipie_dsl.method') %></th>
+          <th><%= t('apipie_dsl.description') %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% dsl[:methods].each do |meth| %>
+          <% if !meth[:show] %>
+            <% next %>
+          <% end %>
+          <tr>
+            <td>
+              <a href='<%= meth[:doc_url] %><%= @doc[:link_extension] %>'><%= meth[:name] %></a>
+              <% if meth[:deprecated] %>
+                <code>DEPRECATED</code>
+              <% end %>
+            </td>
+            <td width='60%'><%= meth[:short_description] %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% end %>
+<% end %>
+
+<% unless content_for(:apipie_dsl_footer) == @doc[:copyright] %>
+  <%= content_for :apipie_dsl_footer, raw(@doc[:copyright]) %>
+<% end %>

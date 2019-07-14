@@ -6,16 +6,24 @@ module ApipieDSL
       include ApipieDSL::Base
       include ApipieDSL::Parameter
 
-      def initialize(method_description, scope, return_type, block)
+      def initialize(method_description, options, block)
         @method_description = method_description
-        @scope = scope
-        @param_group = { scope: scope }
+        @scope = options[:scope]
+        @param_group = { scope: @scope }
+        @options = options
+        @return_type = (@options.keys & %i[array_of one_of object_of param_group]).first
 
-        if block
+        return unless @options[@return_type].is_a?(::Class)
+
+        if block && (@options[@return_type] == Hash)
           instance_exec(&block)
-        elsif !return_type.is_a?(Symbol)
-          class_description = ApipieDSL.get_class_description(return_type)
-          @params_ordered = class_description&.property_descriptions
+        else
+          class_description = ApipieDSL.get_class_description(@options[@return_type])
+          @params_ordered = if class_description.nil?
+                              []
+                            else
+                              class_description.property_descriptions
+                            end
         end
       end
 
@@ -34,8 +42,32 @@ module ApipieDSL
         end.compact
       end
 
+      def return_class
+        case @return_type
+        when :object_of
+          @options[@return_type]
+        when :one_of, :param_group
+          Object
+        when :array_of
+          Array
+        end
+      end
+
+      def return_data(lang = nil)
+        if %i[one_of array_of].include?(@return_type)
+          @options[@return_type]
+        else
+          data = params_ordered.map { |param| param.to_hash(lang) }
+          data.empty? ? '' : data
+        end
+      end
+
       def to_hash(lang = nil)
-        params_ordered.map { |param| param.to_hash(lang) }
+        {
+          meta: @return_type,
+          class: return_class,
+          data: return_data(lang)
+        }
       end
     end
   end
@@ -48,18 +80,12 @@ module ApipieDSL
     end
 
     def initialize(method_description, options, block)
-      @return_type = options[:param_group] || options[:object_of]
-      @array_of = options[:array_of] || false
-      raise ReturnsMultipleDefinitionError, options if @array_of && @return_type
+      if options[:array_of] && options[:one_of] && options[:object_of] && options[:param_group]
+        raise ReturnsMultipleDefinitionError, options
+      end
 
-      @return_type ||= @array_of
       @description = options[:desc]
-
-      @returns_object = ReturnObject.new(method_description, options[:scope], @return_type, block)
-    end
-
-    def array?
-      @array_of != false
+      @returns_object = ReturnObject.new(method_description, options, block)
     end
 
     def params_ordered
@@ -67,16 +93,10 @@ module ApipieDSL
     end
 
     def to_hash(lang = nil)
-      hash = {
+      {
         description: @description,
-        array: array?,
-        object: {
-          class: ApipieDSL.get_class_name(@return_type),
-          properties: @returns_object.to_hash(lang)
-        }
+        object: @returns_object.to_hash(lang)
       }
-      hash[:object].delete(:class) if @return_type.is_a?(Symbol)
-      hash
     end
   end
 end

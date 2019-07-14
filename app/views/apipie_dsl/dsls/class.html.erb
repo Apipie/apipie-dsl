@@ -1,0 +1,71 @@
+<ul class='breadcrumb'>
+  <li>
+    <a href='<%= @doc[:doc_url] %><%= @doc[:link_extension] %>'><%= @doc[:name] %> <%= @klass[:version] %></a>
+    <span class='divider'>/</span>
+  </li>
+  <li class='active'>
+    <%= @klass[:name] %>
+    <% if @klass[:version] %><% end %>
+  </li>
+  <%= render(:partial => 'languages', :locals => {:doc_url => @klass[:doc_url]}) %>
+</ul>
+
+<div class='page-header'>
+  <h1>
+    <%= @klass[:name] %>
+    <% if @klass[:deprecated] %>
+        <code>DEPRECATED</code>
+    <% end %>
+    <br>
+    <small><%= raw @klass[:short_description] %></small>
+  </h1>
+</div>
+
+<% unless @klass[:full_description].blank? %>
+  <div><%= raw @klass[:full_description] %></div>
+<% end %>
+
+<% unless @klass[:metadata].blank? %>
+  <h2>Metadata</h2>
+  <%= render(:partial => 'metadata', :locals => {:meta => @klass[:metadata]}) %>
+<% end %>
+
+<div class='accordion' id='accordion'>
+
+  <% @klass[:methods].each do |meth| %>
+    <% if !meth[:show] %>
+      <% next %>
+    <% end %>
+    <hr>
+    <div class='pull-right small'>
+      <a href='<%= meth[:doc_url] %><%= @doc[:link_extension] %>'> >>> </a>
+    </div>
+    <div>
+      <h2>
+        <a href='#description-<%= escaped_method_name(meth[:name], '_') %>'
+         class='accordion-toggle'
+         data-toggle='collapse'
+         data-parent='#accordion'>
+          <%= method_signature(meth) %>
+        </a>
+        <% if meth[:deprecated] %>
+          <code>DEPRECATED</code>
+        <% end %>
+        <br>
+        <small><%= raw meth[:short_description] %></small>
+      </h2>
+    </div>
+
+    <% unless meth[:see].empty? %>
+      Also see <%= meth[:see].map { |s| link_to(s[:description], "#{s[:link]}#{@doc[:link_extension]}") }.to_sentence.html_safe %>.
+    <% end %>
+
+    <div id='description-<%= escaped_method_name(meth[:name], '_') %>' class='collapse accordion-body'>
+      <%= render(:partial => 'method_detail', :locals => {:method => meth, :h_level => 3}) %>
+    </div>
+  <% end %>
+</div>
+
+<% unless content_for(:apipie_dsl_footer) == @doc[:copyright] %>
+  <%= content_for :apipie_dsl_footer, raw(@doc[:copyright]) %>
+<% end %>

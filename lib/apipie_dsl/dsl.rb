@@ -35,7 +35,8 @@ module ApipieDSL
           raises: [],
           returns: nil,
           see: [],
-          show: true
+          show: true,
+          examples: []
         }
     end
   end
@@ -158,7 +159,7 @@ module ApipieDSL
 
     def method(name, desc = nil, _options = {})
       dsl_data[:name] = name
-      dsl_data[:description] = desc
+      dsl_data[:short_description] = desc
     end
 
     # Describe possible errors
@@ -189,15 +190,12 @@ module ApipieDSL
       elsif retobj_or_options.is_a?(Symbol)
         options[:param_group] = retobj_or_options
       else
-        options[:object_of] = retobj_or_options
+        options[:object_of] ||= retobj_or_options
       end
 
       options[:scope] ||= default_param_group_scope
-      descriptor = options[:param_group] || options[:array_of] || options[:object_of]
 
-      raise ArgumentError, 'Cannot specify both block and param_group' if descriptor && block
-
-      block = ApipieDSL.get_param_group(options[:scope], descriptor) if descriptor&.is_a?(Symbol)
+      raise ArgumentError, 'Block can be specified for Hash return type only' if block && (options[:object_of] != Hash)
 
       dsl_data[:returns] = [options, block]
     end
@@ -209,6 +207,10 @@ module ApipieDSL
     #   def print; end
     def see(*args)
       dsl_data[:see] << args
+    end
+
+    def example(example)
+      dsl_data[:examples] << example
     end
   end
 
@@ -343,7 +345,7 @@ module ApipieDSL
       block = proc {} unless block_given?
 
       delegatee = Delegatee.instance_for(self).with(&block)
-      delegatee.desc(options[:desc])
+      delegatee.short(options[:desc])
       # Don't eval the block, since it will be evaluated after method is defined
       return if context == :method
 
@@ -395,7 +397,7 @@ module ApipieDSL
       block = proc {} unless block_given?
 
       delegatee = Delegatee.instance_for(self).with(&block)
-      delegatee.desc(options[:desc])
+      delegatee.short(options[:desc])
       # Don't eval the block, since it will be evaluated after method is defined
       return if context == :method
 

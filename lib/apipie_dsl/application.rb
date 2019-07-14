@@ -159,7 +159,8 @@ module ApipieDSL
     end
 
     def docs(version, class_name, method_name, lang)
-      return unless valid_search_args?(version, class_name, method_name)
+      empty_doc = empty_docs(version, lang)
+      return empty_doc unless valid_search_args?(version, class_name, method_name)
 
       classes =
         if class_name.nil?
@@ -170,17 +171,8 @@ module ApipieDSL
         else
           [@class_descriptions[version][class_name].to_hash(method_name, lang)]
         end
-      url_args = ApipieDSL.configuration.version_in_url ? version : ''
-      {
-        docs: {
-          name: ApipieDSL.configuration.app_name,
-          info: ApipieDSL.app_info(version, lang),
-          copyright: ApipieDSL.configuration.copyright,
-          doc_url: ApipieDSL.full_url(url_args),
-          dsl_url: ApipieDSL.dsl_base_url(version),
-          classes: classes
-        }
-      }
+      empty_doc[:docs][:classes] = classes
+      empty_doc
     end
 
     def dsl_classes_paths
@@ -223,6 +215,20 @@ module ApipieDSL
     end
 
     private
+
+    def empty_docs(version, lang)
+      url_args = ApipieDSL.configuration.version_in_url ? version : ''
+      {
+        docs: {
+          name: ApipieDSL.configuration.app_name,
+          info: ApipieDSL.app_info(version, lang),
+          copyright: ApipieDSL.configuration.copyright,
+          doc_url: ApipieDSL.full_url(url_args),
+          dsl_url: ApipieDSL.dsl_base_url(version),
+          classes: {}
+        }
+      }
+    end
 
     def valid_search_args?(version, class_name, method_name)
       return false unless class_descriptions.key?(version)

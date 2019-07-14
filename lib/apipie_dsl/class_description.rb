@@ -72,7 +72,7 @@ module ApipieDSL
     def doc_url
       crumbs = []
       crumbs << version if ApipieDSL.configuration.version_in_url
-      crumbs << @id
+      crumbs << id
       ApipieDSL.full_url(crumbs.join('/'))
     end
 
@@ -90,7 +90,7 @@ module ApipieDSL
       methods = if method_name.nil?
                   @methods.map { |_key, method_description| method_description.to_hash(lang) }
                 else
-                  [@_methods[method_name.to_sym].to_hash(lang)]
+                  [@methods[method_name.to_sym].to_hash(lang)]
                 end
       {
         doc_url: doc_url,

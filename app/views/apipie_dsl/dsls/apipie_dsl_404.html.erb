@@ -1,0 +1,17 @@
+<h1 class='page-header'>
+  <%= t('apipie_dsl.oops') %>
+  <small>
+  <% if params[:method].blank? %>
+    <%= t('apipie_dsl.class_not_found_html', klass: "<code>#{h(params[:class])}</code>".html_safe) %>
+  <% else %>
+    <%= t('apipie_dsl.method_not_found_html', klass: "<code>#{h(params[:class])}</code>".html_safe,
+        :method => "<code>#{h(params[:method])}</code>".html_safe) %>
+  <% end %>
+  </small>
+</h1>
+
+<% if @doc %>
+  <%= t('apipie_dsl.goto_homepage_html', :href => link_to(
+    t('apipie_dsl.goto_homepage_href', :app_name => @doc[:name]),
+    File.join(@doc[:doc_url], @doc[:link_extension]))) %>
+<% end %>
