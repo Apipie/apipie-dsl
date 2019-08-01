@@ -33,7 +33,7 @@ module ApipieDSL
     end
 
     def app_info=(description)
-      version = Apipie.configuration.default_version
+      version = ApipieDSL.configuration.default_version
       @app_info[version] = description
     end
 
