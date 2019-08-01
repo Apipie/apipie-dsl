@@ -34,7 +34,6 @@
 <% unless method[:returns].blank? %>
   <%= heading(t('apipie_dsl.returns'), h_level) %>
   <% if method[:returns][:description] %>
-    <%= heading("#{t('apipie_dsl.description')}:", h_level + 1) %>
     <p><%= method[:returns][:description] %></p>
   <% end %>
   <table class='table'>
