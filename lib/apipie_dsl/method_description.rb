@@ -91,7 +91,7 @@ module ApipieDSL
         metadata: @metadata,
         see: see.map(&:to_hash),
         show: @show,
-        examples: @examples,
+        examples: @examples
       }
     end
   end

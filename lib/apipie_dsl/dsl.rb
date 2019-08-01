@@ -209,8 +209,13 @@ module ApipieDSL
       dsl_data[:see] << args
     end
 
-    def example(example)
-      dsl_data[:examples] << example
+    def example(example, desc_or_options = nil, options = {})
+      if desc_or_options.is_a?(Hash)
+        options.merge!(desc_or_options)
+      elsif !desc_or_options.nil?
+        options[:desc] = desc_or_options
+      end
+      dsl_data[:examples] << { example: example, desc: options[:desc] }
     end
   end
 

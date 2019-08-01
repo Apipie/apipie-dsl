@@ -13,7 +13,10 @@
 <% unless method[:examples].blank? %>
   <%= heading(t('apipie_dsl.examples'), h_level) %>
   <% method[:examples].each do |example| %>
-    <pre class="prettyprint"><%= example %></pre>
+    <% if example[:desc] %>
+      <p><%= example[:desc] %></p>
+    <% end %>
+    <pre class="prettyprint"><%= example[:example] %></pre>
   <% end %>
 <% end %>
 
