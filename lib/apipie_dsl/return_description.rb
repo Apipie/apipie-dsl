@@ -58,7 +58,7 @@ module ApipieDSL
           @options[@return_type]
         else
           data = params_ordered.map { |param| param.to_hash(lang) }
-          data.empty? ? '' : data
+          data.empty? ? nil : data
         end
       end
 
