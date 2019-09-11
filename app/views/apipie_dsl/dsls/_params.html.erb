@@ -14,6 +14,12 @@
     </td>
     <td>
       <%= param[:description].html_safe %>
+      <%- if param[:type] != 'required' %>
+        <p><strong>Default value:</strong></p>
+        <ul>
+          <li><%= resolve_default(param[:default]) %></li>
+        </ul>
+      <%- end %>
       <%- if param[:validations].present? || param[:validator].present? %>
         <p><strong>Validations:</strong></p>
         <ul>
