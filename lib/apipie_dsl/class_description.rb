@@ -35,7 +35,7 @@ module ApipieDSL
     def id
       return @klass.name if ApipieDSL.configuration.class_full_names?
 
-      @klass.name.split('::').last
+      @name
     end
 
     def version

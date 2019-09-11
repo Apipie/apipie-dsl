@@ -148,6 +148,8 @@ Inheritance is supported, so you can specify common params for group of classes
 in their parent class.
 
 The following keywords are available (all are optional):
+  - __name__ - Custom class name (in case if you want to explicitly save full
+    class name e.g. ParentModule::Class)
 
   - __property__ - Object's property (could be an `attr_reader` or public
     method with return value).

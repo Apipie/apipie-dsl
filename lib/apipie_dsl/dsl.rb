@@ -234,6 +234,11 @@ module ApipieDSL
       ApipieDSL.set_class_versions(class_scope, versions)
     end
 
+    def name(new_name)
+      dsl_data[:class_name] = new_name
+    end
+    alias_method :label, :name
+
     def property(name, validator, desc_or_options = nil, options = {}, &block)
       options[:type] = :property
       dsl_data[:properties] << [name,
