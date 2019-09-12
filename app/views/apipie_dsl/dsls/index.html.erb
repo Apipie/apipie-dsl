@@ -12,18 +12,19 @@
 
 <h1 class='page-header'><%= t('apipie_dsl.classes') %></h1>
 
-<% @doc[:classes].sort_by(&:first).each do |key, dsl| %>
+<% @doc[:classes].sort_by(&:first).each do |_, klass| %>
+  <% next unless klass[:show] %>
   <h2>
-    <a href='<%= dsl[:doc_url] %><%= @doc[:link_extension] %>'>
-      <%= dsl[:name] %>
+    <a href='<%= klass[:doc_url] %><%= @doc[:link_extension] %>'>
+      <%= klass[:name] %>
     </a>
-    <% if dsl[:deprecated] %>
+    <% if klass[:deprecated] %>
         <code>DEPRECATED</code>
     <% end %>
     <br>
-    <small><%= dsl[:short_description] %></small>
+    <small><%= klass[:short_description] %></small>
   </h2>
-  <% unless dsl[:properties].empty? %>
+  <% unless klass[:properties].empty? %>
     <table class='table'>
       <thead>
         <tr>
@@ -32,7 +33,7 @@
         </tr>
       </thead>
       <tbody>
-        <% dsl[:properties].each do |prop| %>
+        <% klass[:properties].each do |prop| %>
           <% if !prop[:show] %>
             <% next %>
           <% end %>
@@ -49,7 +50,7 @@
       </tbody>
     </table>
   <% end %>
-  <% unless dsl[:methods].empty? %>
+  <% unless klass[:methods].empty? %>
     <table class='table'>
       <thead>
         <tr>
@@ -58,7 +59,7 @@
         </tr>
       </thead>
       <tbody>
-        <% dsl[:methods].each do |meth| %>
+        <% klass[:methods].each do |meth| %>
           <% if !meth[:show] %>
             <% next %>
           <% end %>

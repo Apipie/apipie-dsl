@@ -2,11 +2,12 @@
 
 module ApipieDSL
   class Application
-    attr_reader :class_descriptions
+    attr_reader :class_descriptions, :refs
 
     def initialize
       @class_descriptions = Hash.new { |h, version| h[version] = {} }
       @class_versions = Hash.new { |h, klass| h[klass.to_s] = [] }
+      @refs = Hash.new { |h, version| h[version] = {} }
       @param_groups = {}
     end
 
@@ -85,6 +86,13 @@ module ApipieDSL
         class_description = ApipieDSL::ClassDescription.new(klass, class_name, dsl_data, version)
         ApipieDSL.debug("@class_descriptions[#{version}][#{class_name}] = #{class_description}")
         @class_descriptions[version][class_name] ||= class_description
+      end
+      class_description.refs.each do |ref|
+        if @refs[version][ref]
+          raise MultipleDefinitionError.new("references for #{class_name}")
+        end
+
+        @refs[version][ref] = class_description
       end
       class_description
     end

@@ -40,4 +40,13 @@ module ApipieDSLHelper
 
     "#{method_desc[:name]}(#{params.join(', ')})"
   end
+
+  def reference_for(obj, version, link_extension)
+    return obj.to_s unless [::Module, ::Class].include?(obj.class)
+
+    referenced = ApipieDSL.app.refs[version][ApipieDSL.app.get_class_name(obj)]
+    return obj.to_s if referenced.nil?
+
+    "<a href='" + referenced.doc_url + link_extension + "'>#{obj.to_s.html_safe}</a>"
+  end
 end

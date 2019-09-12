@@ -75,8 +75,8 @@ module ApipieDSL
     end
 
     def self.generate_class_pages(version, file_base, doc, include_json = false, lang = nil)
-      doc[:docs][:classes].each do |class_name, _|
-        class_file_base = File.join(file_base, class_name.to_s)
+      doc[:docs][:classes].each do |class_name, class_desc|
+        class_file_base = File.join(file_base, class_desc[:name])
         FileUtils.mkdir_p(File.dirname(class_file_base)) unless File.exist?(File.dirname(class_file_base))
 
         doc = ApipieDSL.docs(version, class_name, nil, lang)

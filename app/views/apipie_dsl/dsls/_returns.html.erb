@@ -46,8 +46,8 @@
       <strong><%= return_object[:meta] %> </strong><br>
     </td>
     <td>
-      <% details = return_object[:data].blank? ? return_object[:class] : return_object[:data] %>
-      <%= details.to_s.html_safe %>
+      <% klass = return_object[:data].blank? ? return_object[:class] : return_object[:data] %>
+      <%= raw reference_for(klass, @doc[:classes].first[:version], @doc[:link_extension]) %>
     </td>
   </tr>
 <% end %>

@@ -151,12 +151,18 @@ The following keywords are available (all are optional):
   - __name__ - Custom class name (in case if you want to explicitly save full
     class name e.g. ParentModule::Class)
 
+  - __refs__/__referenced_on__ - Which references should the class understand
+    to be linked in the documentation (e.g. if the class is mentioned as return
+    value of a method, then the value will be linked with the class).
+
   - __property__ - Object's property (could be an `attr_reader` or public
     method with return value).
 
 ##### Example:
 ```ruby
-  apipie :class, 'Site members' do
+  apipie :class, 'Base tag' do
+    name 'Base::Tag'
+    refs 'BaseTag', 'Base::Tag', 'Tag'
     dsl_version 'development'
     meta :author => {:name => 'John', :surname => 'Doe'}
     deprecated false

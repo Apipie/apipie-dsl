@@ -42,6 +42,18 @@ module ApipieDSL
     end
   end
 
+  class MultipleDefinitionError < Error
+    attr_accessor :value
+
+    def initialize(value)
+      @value = value
+    end
+
+    def to_s
+      "Multiple definition of #{@value}"
+    end
+  end
+
   class ReturnsMultipleDefinitionError < Error
     def to_s
       "A 'returns' statement cannot indicate both array_of and type"

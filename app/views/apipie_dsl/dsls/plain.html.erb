@@ -1,19 +1,17 @@
 <% @doc[:classes].sort_by(&:first).each do |key, klass| %>
+  <% next unless klass[:show] %>
   <h4><a href='#<%= key %>'><%= klass[:name] %></a></h4>
   <ul>
     <% klass[:methods].each do |method| %>
-      <% if !method[:show] %>
-        <% next %>
-      <% end %>
+      <% next unless method[:show] %>
       <li><a href='#<%= key %>-<%= method[:name] %>'><%= method[:name] %></a></li>
     <% end %>
   </ul>
 <% end %>
 
 <% @doc[:classes].sort_by(&:first).each do |key, klass| %>
-
+  <% next unless klass[:show] %>
   <hr/>
-
   <div>
     <h2 id="<%= key %>">
       <a href='#<%= key %>'><%= klass[:name] %></a><br>
@@ -27,9 +25,7 @@
 
   <div>
     <% klass[:methods].each do |method| %>
-      <% if !method[:show] %>
-        <% next %>
-      <% end %>
+      <% next unless method[:show] %>
       <hr/>
 
       <h3 id="<%= "#{key}-#{method[:name]}" %>">

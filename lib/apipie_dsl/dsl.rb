@@ -239,6 +239,11 @@ module ApipieDSL
     end
     alias_method :label, :name
 
+    def refs(*class_names)
+      dsl_data[:refs] = class_names
+    end
+    alias_method :referenced_on, :refs
+
     def property(name, validator, desc_or_options = nil, options = {}, &block)
       options[:type] = :property
       dsl_data[:properties] << [name,
