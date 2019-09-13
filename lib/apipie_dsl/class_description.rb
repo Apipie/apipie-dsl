@@ -3,7 +3,7 @@
 module ApipieDSL
   class ClassDescription
     attr_reader :klass, :short_description, :full_description, :methods,
-                :deprecated, :show, :refs
+                :deprecated, :show, :refs, :sections
 
     def initialize(klass, class_name, dsl_data = nil, version = nil)
       @klass = klass
@@ -13,6 +13,7 @@ module ApipieDSL
       @version = version || ApipieDSL.configuration.default_version
       @parent = ApipieDSL.get_class_description(ApipieDSL.superclass_for(klass), version)
       @refs = []
+      @sections = []
       @show = true
       update_from_dsl_data(dsl_data) if dsl_data
     end
@@ -30,6 +31,7 @@ module ApipieDSL
         ApipieDSL::ParameterDescription.from_dsl_data(self, args)
       end
       @refs = dsl_data[:refs] || [@name]
+      @sections = dsl_data[:sections] || @sections
       return unless dsl_data[:app_info]
 
       ApipieDSL.configuration.app_info[version] = dsl_data[:app_info]

@@ -6,7 +6,7 @@ module ApipieDSL
                   :default_version, :debug, :version_in_url, :validate,
                   :doc_path, :languages, :link_extension, :translate, :locale,
                   :default_locale, :class_full_names, :autoload_methods,
-                  :dsl_classes_matcher, :dsl_classes_matchers
+                  :dsl_classes_matcher, :dsl_classes_matchers, :sections
     attr_writer   :validate_value, :ignored
     attr_reader   :app_info, :dsl_base_url
 
@@ -60,6 +60,7 @@ module ApipieDSL
       @autoload_methods = false
       @dsl_classes_matcher = ''
       @dsl_classes_matchers = []
+      @sections = [:all]
     end
   end
 end

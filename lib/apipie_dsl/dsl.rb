@@ -36,7 +36,8 @@ module ApipieDSL
           returns: nil,
           see: [],
           show: true,
-          examples: []
+          examples: [],
+          sections: [:all]
         }
     end
   end
@@ -243,6 +244,21 @@ module ApipieDSL
       dsl_data[:refs] = class_names
     end
     alias_method :referenced_on, :refs
+
+    def sections(sec_or_options, options = {})
+      if sec_or_options.is_a?(Hash)
+        options.merge!(sec_or_options)
+      elsif !sec_or_options.nil?
+        options[:only] = sec_or_options
+      end
+      only = [options[:only]].flatten || ApipieDSL.configuration.sections
+      except = if options[:except]
+                 [options[:except]].flatten
+               else
+                 []
+               end
+      dsl_data[:sections] = only - except
+    end
 
     def property(name, validator, desc_or_options = nil, options = {}, &block)
       options[:type] = :property

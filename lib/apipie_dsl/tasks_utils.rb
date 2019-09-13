@@ -67,10 +67,11 @@ module ApipieDSL
     def self.generate_index_page(file_base, doc, include_json = false, show_versions = false, lang = nil)
       FileUtils.mkdir_p(File.dirname(file_base)) unless File.exist?(File.dirname(file_base))
       versions = show_versions && ApipieDSL.available_versions
-      render_page("#{file_base}#{lang_ext(lang)}.html", 'index',
-                  doc: doc[:docs], versions: versions, language: lang,
-                  languages: ApipieDSL.configuration.languages)
-
+      ApipieDSL.configuration.sections.each do |section|
+        render_page("#{file_base}-sec-#{section}#{lang_ext(lang)}.html", 'index',
+        doc: doc[:docs], versions: versions, language: lang,
+        languages: ApipieDSL.configuration.languages, section: section)
+      end
       File.open("#{file_base}#{lang_ext(lang)}.json", 'w') { |f| f << doc.to_json } if include_json
     end
 

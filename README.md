@@ -50,6 +50,9 @@ language for full descriptions.
 
   - __default_version__ - Default DSL version to be used (1.0 by default).
 
+  - __sections__ - What sections should the HTML documentation have
+    ([:all] by default).
+
   - __validate__ - Parameters validation is turned off when set to false. When
     set to `:explicitly`, you must do the parameters validation yourself.
     When set to `:implicitly` (or just true), your classes' methods are wrapped
@@ -111,6 +114,7 @@ ApipieDSL.configure do |config|
    This is where you can inform user about your application and DSL
    in general.
   "
+  config.sections = %i[all additional]
 end
 ```
 ### DSL Reference
@@ -155,6 +159,8 @@ The following keywords are available (all are optional):
     to be linked in the documentation (e.g. if the class is mentioned as return
     value of a method, then the value will be linked with the class).
 
+  - __sections__ - In which sections the class should be shown.
+
   - __property__ - Object's property (could be an `attr_reader` or public
     method with return value).
 
@@ -162,6 +168,7 @@ The following keywords are available (all are optional):
 ```ruby
   apipie :class, 'Base tag' do
     name 'Base::Tag'
+    sections only: :additional
     refs 'BaseTag', 'Base::Tag', 'Tag'
     dsl_version 'development'
     meta :author => {:name => 'John', :surname => 'Doe'}

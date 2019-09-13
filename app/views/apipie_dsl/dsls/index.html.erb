@@ -1,5 +1,14 @@
 <ul class='breadcrumb'>
-  <li class='active'><a href='<%= @doc[:doc_url] %><%= @doc[:link_extension] %>'><%= @doc[:name] %> <%= @doc[:classes].values.first && @doc[:classes].values.first[:version] %></a></li>
+  <% dsl_sections.each do |section| %>
+    <% if section == @section %>
+      <li class='active'><a href='<%= @doc[:doc_url] %><%= "-sec-#{section}"%><%= @doc[:link_extension] %>'><%= t("apipie_dsl.#{@section}") %></a></li>
+    <% else %>
+      <li><a href='<%= @doc[:doc_url] %><%= "-sec-#{section}"%><%= @doc[:link_extension] %>'><%= t("apipie_dsl.#{section}") %></a></li>
+    <% end %>
+  <% end %>
+</ul>
+<ul class='breadcrumb'>
+  <li class='active'><a href='<%= @doc[:doc_url] %><%= "-sec-#{@section}" %><%= @doc[:link_extension] %>'><%= @doc[:name] %> <%= @doc[:classes].values.first && @doc[:classes].values.first[:version] %></a></li>
   <%= render(:partial => 'languages', :locals => {:doc_url => @doc[:doc_url]}) %>
   <% if @versions && @versions.size > 1 %>
   <li class='pull-right'>
@@ -13,7 +22,7 @@
 <h1 class='page-header'><%= t('apipie_dsl.classes') %></h1>
 
 <% @doc[:classes].sort_by(&:first).each do |_, klass| %>
-  <% next unless klass[:show] %>
+  <% next unless klass[:show] && in_section?(@section, klass[:name]) %>
   <h2>
     <a href='<%= klass[:doc_url] %><%= @doc[:link_extension] %>'>
       <%= klass[:name] %>

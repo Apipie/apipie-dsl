@@ -49,4 +49,15 @@ module ApipieDSLHelper
 
     "<a href='" + referenced.doc_url + link_extension + "'>#{obj.to_s.html_safe}</a>"
   end
+
+  def dsl_sections
+    ApipieDSL.configuration.sections
+  end
+
+  def in_section?(section, klass)
+    class_desc = ApipieDSL.get_class_description(ApipieDSL.get_class_name(klass))
+    raise Error, "Cannot find #{klass} description" if class_desc.nil?
+
+    class_desc.sections.include?(section)
+  end
 end
