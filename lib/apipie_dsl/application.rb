@@ -104,6 +104,7 @@ module ApipieDSL
     #   - "io#puts" get default version
     #   - "v2#io#puts" get specific version
     def get_method_description(class_name, method_name = nil)
+      puts "getting #{class_name}##{method_name} documentation"
       crumbs = class_name.split('#')
       method_name = crumbs.pop if method_name.nil?
       class_name = crumbs.join('#')
@@ -198,9 +199,10 @@ module ApipieDSL
 
     def reload_documentation
       dsl_classes_paths.each do |file|
+        puts "loading #{file}"
         begin
           load file
-        rescue StandardError
+ #       rescue StandardError # todo enable in debug mode
           # Some constant the file uses may not be defined
           # before it's loaded
         end

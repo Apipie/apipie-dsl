@@ -11,6 +11,7 @@ namespace :apipie_dsl do
       subdir = File.basename(out)
       ApipieDSL::TasksUtils.copy_jscss(out)
       ApipieDSL.configuration.version_in_url = false
+      ApipieDSL.reload_documentation
       ([nil] + ApipieDSL.configuration.languages).each do |lang|
         I18n.locale = lang || ApipieDSL.configuration.default_locale
         ApipieDSL.url_prefix = "./#{subdir}"
