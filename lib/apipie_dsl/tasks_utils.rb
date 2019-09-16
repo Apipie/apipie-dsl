@@ -116,5 +116,10 @@ module ApipieDSL
       FileUtils.mkdir_p dest
       FileUtils.cp_r "#{src}/.", dest
     end
+
+    def self.with_loaded_documentation
+      ApipieDSL.reload_documentation
+      yield
+    end
   end
 end

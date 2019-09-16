@@ -5,10 +5,7 @@ module ApipieDSL
     attr_reader :class_descriptions, :refs
 
     def initialize
-      @class_descriptions = Hash.new { |h, version| h[version] = {} }
-      @class_versions = Hash.new { |h, klass| h[klass.to_s] = [] }
-      @refs = Hash.new { |h, version| h[version] = {} }
-      @param_groups = {}
+      initialize_environment
     end
 
     def available_versions
@@ -89,7 +86,7 @@ module ApipieDSL
       end
       class_description.refs.each do |ref|
         if @refs[version][ref]
-          raise MultipleDefinitionError.new("references for #{class_name}")
+          ApipieDSL.debug("Overwriting refs for #{class_name}")
         end
 
         @refs[version][ref] = class_description
@@ -112,6 +109,7 @@ module ApipieDSL
     #   - "io#puts" get default version
     #   - "v2#io#puts" get specific version
     def get_method_description(class_name, method_name = nil)
+      ApipieDSL.debug("Getting #{class_name}##{method_name} documentation")
       crumbs = class_name.split('#')
       method_name = crumbs.pop if method_name.nil?
       class_name = crumbs.join('#')
@@ -205,14 +203,28 @@ module ApipieDSL
     end
 
     def reload_documentation
+      # don't load translated strings, we'll translate them later
+      old_locale = locale
+      reset_locale(ApipieDSL.configuration.default_locale)
+
+      rails_mark_classes_for_reload if defined?(Rails)
+
       dsl_classes_paths.each do |file|
         begin
-          load file
+          ApipieDSL.debug("Loading #{file}")
+          if defined?(Rails)
+            load_class_from_file(file)
+          else
+            load(file)
+          end
         rescue StandardError
           # Some constant the file uses may not be defined
           # before it's loaded
+          # TODO: better loading
         end
       end
+
+      reset_locale(old_locale)
     end
 
     def load_documentation
@@ -222,7 +234,22 @@ module ApipieDSL
       @documentation_loaded = true
     end
 
+    def locale
+      ApipieDSL.configuration.locale.call(nil) if ApipieDSL.configuration.locale
+    end
+
+    def reset_locale(loc)
+      ApipieDSL.configuration.locale.call(loc) if ApipieDSL.configuration.locale
+    end
+
     private
+
+    def initialize_environment
+      @class_descriptions ||= Hash.new { |h, version| h[version] = {} }
+      @class_versions ||= Hash.new { |h, klass| h[klass.to_s] = [] }
+      @refs ||= Hash.new { |h, version| h[version] = {} }
+      @param_groups ||= {}
+    end
 
     def empty_docs(version, lang)
       url_args = ApipieDSL.configuration.version_in_url ? version : ''
@@ -236,6 +263,21 @@ module ApipieDSL
           classes: {}
         }
       }
+    end
+
+    def load_class_from_file(class_file)
+      require_dependency class_file
+    end
+
+    # Since Rails 3.2, the classes are reloaded only on file change.
+    # We need to reload all the classes to rebuild the
+    # docs, therefore we just force to reload all the code.
+    def rails_mark_classes_for_reload
+      unless Rails.application.config.cache_classes
+        Rails::VERSION::MAJOR == 4 ? ActionDispatch::Reloader.cleanup! : Rails.application.reloader.reload!
+        initialize_environment
+        Rails::VERSION::MAJOR == 4 ? ActionDispatch::Reloader.prepare! : Rails.application.reloader.prepare!
+      end
     end
 
     def valid_search_args?(version, class_name, method_name)

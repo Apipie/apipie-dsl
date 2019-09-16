@@ -397,8 +397,9 @@ module ApipieDSL
         apipie
       end
 
-      dsl_data = Delegatee.instance.eval_dsl_for(:method)
-      class_scope = Delegatee.instance.class_scope
+      instance = Delegatee.instance
+      dsl_data = instance.eval_dsl_for(:method)
+      class_scope = instance.class_scope
 
       ApipieDSL.remove_method_description(class_scope, dsl_data[:dsl_versions], method_name)
       method_desc = ApipieDSL.define_method_description(class_scope, method_name, dsl_data)
