@@ -17,7 +17,10 @@ require 'apipie_dsl/validator'
 
 module ApipieDSL
   require 'fileutils'
-  require 'apipie_dsl/railtie' if defined?(Rails)
+  if defined?(Rails)
+    require 'apipie_dsl/railtie' 
+    require 'apipie_dsl/routing'
+  end
 
   def self.root
     File.dirname(__dir__)

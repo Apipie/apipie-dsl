@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ApipieDSLHelper
+module ApipieDslHelper
   include ActionView::Helpers::TagHelper
 
   def heading(title, level = 1)
@@ -44,7 +44,7 @@ module ApipieDSLHelper
   def reference_for(obj, version, link_extension)
     return obj.to_s unless [::Module, ::Class].include?(obj.class)
 
-    referenced = ApipieDSL.app.refs[version][ApipieDSL.app.get_class_name(obj)]
+    referenced = ApipieDSL.refs[version][ApipieDSL.get_class_name(obj)]
     return obj.to_s if referenced.nil?
 
     "<a href='" + referenced.doc_url + link_extension + "'>#{obj.to_s.html_safe}</a>"
@@ -55,8 +55,8 @@ module ApipieDSLHelper
   end
 
   def in_section?(section, klass)
-    class_desc = ApipieDSL.get_class_description(ApipieDSL.get_class_name(klass))
-    raise Error, "Cannot find #{klass} description" if class_desc.nil?
+    class_desc = ApipieDSL.get_class_description(klass)
+    raise ApipieDSL::Error, "Cannot find #{klass} description" if class_desc.nil?
 
     class_desc.sections.include?(section)
   end

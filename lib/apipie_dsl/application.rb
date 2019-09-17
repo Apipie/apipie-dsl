@@ -2,6 +2,15 @@
 
 module ApipieDSL
   class Application
+    if defined? Rails
+      require 'apipie_dsl/static_dispatcher'
+
+      class Engine < Rails::Engine
+        initializer 'static assets', :before => :build_middleware_stack do |app|
+          app.middleware.use ::ApipieDSL::StaticDispatcher, "#{root}/app/public"
+        end
+      end
+    end
     attr_reader :class_descriptions, :refs
 
     def initialize
@@ -82,7 +91,7 @@ module ApipieDSL
       else
         class_description = ApipieDSL::ClassDescription.new(klass, class_name, dsl_data, version)
         ApipieDSL.debug("@class_descriptions[#{version}][#{class_name}] = #{class_description}")
-        @class_descriptions[version][class_name] ||= class_description
+        @class_descriptions[version][class_description.id] ||= class_description
       end
       class_description.refs.each do |ref|
         if @refs[version][ref]

@@ -3,6 +3,7 @@
 module ApipieDSL
   class ViewsGenerator < ::Rails::Generators::Base
     source_root File.expand_path('../../../app/views', __dir__)
+    namespace 'apipie_dsl:views'
     desc 'Copy ApipieDSL views to your application'
 
     def copy_views

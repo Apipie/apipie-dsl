@@ -3,7 +3,7 @@
 module ApipieDSL
   class InstallGenerator < ::Rails::Generators::Base
     source_root File.expand_path('templates', __dir__)
-
+    namespace 'apipie_dsl:install'
     class_option(:route,
                  aliases: '-r',
                  type: :string,
@@ -11,7 +11,7 @@ module ApipieDSL
                  default: '/apipie-dsl')
 
     class_option(:dsl_path,
-                 alias: '-a',
+                 alias: '-d',
                  type: :string,
                  desc: 'What path are DSL requests on',
                  default: '/dsl')
@@ -21,7 +21,7 @@ module ApipieDSL
     end
 
     def add_route
-      route('apipie-dsl')
+      route('apipie_dsl')
     end
   end
 end

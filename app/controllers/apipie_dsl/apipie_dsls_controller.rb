@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-module ApipieDSL
-  class ApipieDSLsController < ActionController::Base
+module ApipieDsl
+  class ApipieDslsController < ActionController::Base
     include ActionView::Context
-    include ApipieDSLHelper
+    include ApipieDslHelper
 
     layout ApipieDSL.configuration.layout
 
@@ -47,7 +47,7 @@ module ApipieDSL
             ApipieDSL.configuration.swagger_suppress_warnings = prev_warning_value
           end
         else
-          @doc = ApipieDSL.to_json(params[:version], params[:class], params[:method], @language)
+          @doc = ApipieDSL.docs(params[:version], params[:class], params[:method], @language)
           @doc = authorized_doc
         end
 
@@ -70,13 +70,13 @@ module ApipieDSL
           @doc[:link_extension] = (@language ? ".#{@language}" : '') + ApipieDSL.configuration.link_extension
           render 'getting_started' and return if @doc[:classes].blank?
 
-          @class = @doc[:classes].first if params[:class].present?
-          @method = @class[:methods].first if params[:method].present?
+          @klass = @doc[:classes].first if params[:class].present?
+          @method = @klass[:methods].first if params[:method].present?
           @languages = ApipieDSL.configuration.languages
 
-          if @class && @method
+          if @klass && @method
             render 'method'
-          elsif @class
+          elsif @klass
             render 'class'
           elsif params[:class].present? || params[:method].present?
             render 'apipie_dsl_404', status: 404
@@ -87,7 +87,7 @@ module ApipieDSL
       end
     end
 
-    def apipie_checksum
+    def apipie_dsl_checksum
     end
 
     private
@@ -112,7 +112,7 @@ module ApipieDSL
 
     def authorized_doc
       return if @doc.nil?
-      return @doc unless Apipie.configuration.authorize
+      return @doc unless ApipieDSL.configuration.authorize
 
       new_doc = { docs: @doc[:docs].clone }
 

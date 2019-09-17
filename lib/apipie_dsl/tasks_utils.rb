@@ -34,7 +34,7 @@ module ApipieDSL
       layouts_paths.unshift("#{Rails.root}/app/views/apipie_dsl/layouts/apipie_dsl") if File.directory?("#{Rails.root}/app/views/apipie_dsl/layouts/apipie_dsl")
       paths = ActionView::PathSet.new(base_paths + layouts_paths)
       r_renderer = ActionView::Base.new(ActionController::Base.append_view_path(paths), {})
-      r_renderer.singleton_class.send(:include, ::ApipieDSLHelper)
+      r_renderer.singleton_class.send(:include, ::ApipieDslHelper)
       r_renderer
     end
 
