@@ -18,6 +18,7 @@ module ApipieDsl
 
     def index
       params[:version] ||= ApipieDSL.configuration.default_version
+      params[:section] ||= ApipieDSL.configuration.default_section
 
       get_format
 
@@ -33,6 +34,7 @@ module ApipieDsl
         end
 
         @language = get_language
+        @section = params[:section]
 
         ApipieDSL.load_documentation if ApipieDSL.configuration.reload_dsl? || (Rails.version.to_i >= 4.0 && !Rails.application.config.eager_load)
 
@@ -47,7 +49,7 @@ module ApipieDsl
             ApipieDSL.configuration.swagger_suppress_warnings = prev_warning_value
           end
         else
-          @doc = ApipieDSL.docs(params[:version], params[:class], params[:method], @language)
+          @doc = ApipieDSL.docs(params[:version], params[:class], params[:method], @language, @section)
           @doc = authorized_doc
         end
 
@@ -98,7 +100,7 @@ module ApipieDsl
       return nil unless ApipieDSL.configuration.translate
 
       lang = Apipie.configuration.default_locale
-      %i[class method version].each do |par|
+      %i[class method version section].each do |par|
         next unless params[par]
 
         splitted = params[par].split('.')
@@ -141,7 +143,7 @@ module ApipieDsl
     end
 
     def get_format
-      %i[class method version].each do |par|
+      %i[class method version section].each do |par|
         next unless params[par]
 
         %i[html json].each do |format|

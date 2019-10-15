@@ -14,16 +14,22 @@ namespace :apipie_dsl do
         ApipieDSL.configuration.version_in_url = false
         ([nil] + ApipieDSL.configuration.languages).each do |lang|
           I18n.locale = lang || ApipieDSL.configuration.default_locale
-          ApipieDSL.url_prefix = "./#{subdir}"
+          ApipieDSL.url_prefix = "../#{subdir}"
           doc = ApipieDSL.docs(args[:version], nil, nil, lang)
           doc[:docs][:link_extension] = "#{lang_ext(lang)}.html"
           ApipieDSL::TasksUtils.generate_one_page(out, doc, lang)
           ApipieDSL::TasksUtils.generate_plain_page(out, doc, lang)
-          ApipieDSL::TasksUtils.generate_index_page(out, doc, false, false, lang)
-          ApipieDSL.url_prefix = "../#{subdir}"
-          ApipieDSL::TasksUtils.generate_class_pages(args[:version], out, doc, false, lang)
-          ApipieDSL.url_prefix = "../../#{subdir}"
-          ApipieDSL::TasksUtils.generate_method_pages(args[:version], out, doc, false, lang)
+          ApipieDSL.configuration.sections.each do |section|
+            ApipieDSL.url_prefix = "../#{subdir}"
+            doc = ApipieDSL.docs(args[:version], nil, nil, lang, section)
+            doc[:docs][:link_extension] = "#{lang_ext(lang)}.html"
+            ApipieDSL::TasksUtils.generate_index_page(out, doc, false, false, lang, section)
+            ApipieDSL.url_prefix = "../../#{subdir}"
+            section_out = "#{out}/#{section}"
+            ApipieDSL::TasksUtils.generate_class_pages(args[:version], section_out, doc, false, lang)
+            ApipieDSL.url_prefix = "../../../#{subdir}"
+            ApipieDSL::TasksUtils.generate_method_pages(args[:version], section_out, doc, false, lang)
+          end
         end
       end
     end

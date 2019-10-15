@@ -118,7 +118,7 @@ module ApipieDSL
       target_params.concat(params_to_add)
     end
 
-    def to_hash(lang = nil)
+    def docs(lang = nil)
       description = if type == :property
                       desc
                     else
@@ -138,7 +138,7 @@ module ApipieDSL
       hash.delete(:default) if %i[required property].include?(type)
       return hash unless validator.sub_params
 
-      hash[:params] = validator.sub_params.map { |param| param.to_hash(lang) }
+      hash[:params] = validator.sub_params.map { |param| param.docs(lang) }
       hash
     end
   end

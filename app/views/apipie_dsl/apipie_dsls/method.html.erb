@@ -1,11 +1,15 @@
 <ul class='breadcrumb'>
   <% dsl_sections.each do |section| %>
-    <li><a href='<%= @doc[:doc_url] %><%= "-sec-#{section}"%><%= @doc[:link_extension] %>'><%= t("apipie_dsl.#{section}") %></a></li>
+    <% if section == @section %>
+      <li class='active'><a href='<%= @doc[:doc_url] %><%= section_ext(section) %><%= @doc[:link_extension] %>'><%= t("apipie_dsl.#{@section}") %></a></li>
+    <% else %>
+      <li><a href='<%= @doc[:doc_url] %><%= section_ext(section) %><%= @doc[:link_extension] %>'><%= t("apipie_dsl.#{section}") %></a></li>
+    <% end %>
   <% end %>
 </ul>
 <ul class='breadcrumb'>
   <li>
-    <a href='<%= @doc[:doc_url] %><%= "-sec-#{dsl_sections.first}" %><%= @doc[:link_extension] %>'><%= @doc[:name] %> <%= @klass[:version] %></a>
+    <a href='<%= @doc[:doc_url] %><%= section_ext(@section) %><%= @doc[:link_extension] %>'><%= @doc[:name] %> <%= @klass[:version] %></a>
     <span class='divider'>/</span>
   </li>
   <li>

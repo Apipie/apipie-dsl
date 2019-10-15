@@ -27,11 +27,11 @@ module ApipieDSL
     end
 
     def self.rails_renderer
-      base_paths = [File.expand_path('../../app/views/apipie_dsl/dsls', __dir__)]
-      base_paths.unshift("#{Rails.root}/app/views/apipie_dsl/dsls") if File.directory?("#{Rails.root}/app/views/apipie_dsl/dsls")
+      base_paths = [File.expand_path('../../app/views/apipie_dsl/apipie_dsls', __dir__)]
+      base_paths.unshift("#{Rails.root}/app/views/apipie_dsl/apipie_dsls") if File.directory?("#{Rails.root}/app/views/apipie_dsl/apipie_dsls")
 
-      layouts_paths = [File.expand_path('../../app/views/apipie_dsl/layouts/apipie_dsl', __dir__)]
-      layouts_paths.unshift("#{Rails.root}/app/views/apipie_dsl/layouts/apipie_dsl") if File.directory?("#{Rails.root}/app/views/apipie_dsl/layouts/apipie_dsl")
+      layouts_paths = [File.expand_path('../../app/views/layouts', __dir__)]
+      layouts_paths.unshift("#{Rails.root}/app/views/layouts") if File.directory?("#{Rails.root}/app/views/layouts/apipie_dsl")
       paths = ActionView::PathSet.new(base_paths + layouts_paths)
       r_renderer = ActionView::Base.new(ActionController::Base.append_view_path(paths), {})
       r_renderer.singleton_class.send(:include, ::ApipieDslHelper)
@@ -44,14 +44,14 @@ module ApipieDSL
           renderer.instance_variable_set("@#{var}", val)
         end
         f.write(renderer.render(template: template.to_s,
-                                layout: (layout && layout.to_s)))
+                                layout: (layout && "apipie_dsl/#{layout}")))
       end
     end
 
     def self.generate_one_page(file_base, doc, lang = nil)
       FileUtils.mkdir_p(File.dirname(file_base)) unless File.exist?(File.dirname(file_base))
 
-      render_page("#{file_base}-onepage#{lang_ext(lang)}.html", 'static',
+      render_page("#{file_base}/#{File.basename(file_base)}-onepage#{lang_ext(lang)}.html", 'static',
                   doc: doc[:docs], language: lang,
                   languages: ApipieDSL.configuration.languages)
     end
@@ -59,19 +59,18 @@ module ApipieDSL
     def self.generate_plain_page(file_base, doc, lang = nil)
       FileUtils.mkdir_p(File.dirname(file_base)) unless File.exist?(File.dirname(file_base))
 
-      render_page("#{file_base}-plain#{lang_ext(lang)}.html", 'plain',
+      render_page("#{file_base}/#{File.basename(file_base)}-plain#{lang_ext(lang)}.html", 'plain',
                   { doc: doc[:docs], language: lang,
                     languages: ApipieDSL.configuration.languages }, nil)
     end
 
-    def self.generate_index_page(file_base, doc, include_json = false, show_versions = false, lang = nil)
-      FileUtils.mkdir_p(File.dirname(file_base)) unless File.exist?(File.dirname(file_base))
+    def self.generate_index_page(file_base, doc, include_json = false, show_versions = false, lang = nil, section = nil)
       versions = show_versions && ApipieDSL.available_versions
-      ApipieDSL.configuration.sections.each do |section|
-        render_page("#{file_base}-sec-#{section}#{lang_ext(lang)}.html", 'index',
-        doc: doc[:docs], versions: versions, language: lang,
-        languages: ApipieDSL.configuration.languages, section: section)
-      end
+      section_file = "#{file_base}/#{section}"
+      FileUtils.mkdir_p(File.dirname(section_file)) unless File.exist?(File.dirname(section_file))
+      render_page("#{section_file}#{lang_ext(lang)}.html",
+      'index', doc: doc[:docs], versions: versions, language: lang,
+               languages: ApipieDSL.configuration.languages, section: section)
       File.open("#{file_base}#{lang_ext(lang)}.json", 'w') { |f| f << doc.to_json } if include_json
     end
 

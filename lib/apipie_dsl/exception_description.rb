@@ -28,7 +28,7 @@ module ApipieDSL
       end
     end
 
-    def to_hash
+    def docs
       {
         error: error,
         description: ApipieDSL.markup_to_html(description),

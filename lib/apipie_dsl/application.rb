@@ -173,18 +173,18 @@ module ApipieDSL
       end
     end
 
-    def docs(version, class_name, method_name, lang)
+    def docs(version, class_name, method_name, lang, section = nil)
       empty_doc = empty_docs(version, lang)
       return empty_doc unless valid_search_args?(version, class_name, method_name)
 
       classes =
         if class_name.nil?
           class_descriptions[version].each_with_object({}) do |(name, description), result|
-            result[name] = description.to_hash(nil, lang)
+            result[name] = description.docs(section, nil, lang)
             result
           end
         else
-          [@class_descriptions[version][class_name].to_hash(method_name, lang)]
+          [@class_descriptions[version][class_name].docs(section, method_name, lang)]
         end
       empty_doc[:docs][:classes] = classes
       empty_doc

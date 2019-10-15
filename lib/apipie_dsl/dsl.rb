@@ -37,7 +37,7 @@ module ApipieDSL
           see: [],
           show: true,
           examples: [],
-          sections: [:all]
+          sections: ['all']
         }
     end
   end

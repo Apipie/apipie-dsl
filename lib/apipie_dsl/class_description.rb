@@ -74,9 +74,10 @@ module ApipieDSL
       @properties.select(&:validator)
     end
 
-    def doc_url
+    def doc_url(section = nil)
       crumbs = []
       crumbs << version if ApipieDSL.configuration.version_in_url
+      crumbs << section if section
       crumbs << id
       ApipieDSL.full_url(crumbs.join('/'))
     end
@@ -89,23 +90,23 @@ module ApipieDSL
       @methods.keys.map(&:to_s).include?(method_name.to_s)
     end
 
-    def to_hash(method_name = nil, lang = nil)
-      raise "Method #{method_name} not found for class #{_name}" if method_name && !valid_method_name?(method_name)
+    def docs(section = nil, method_name = nil, lang = nil)
+      raise "Method #{method_name} not found for class #{id}" if method_name && !valid_method_name?(method_name)
 
       methods = if method_name.nil?
-                  @methods.map { |_key, method_description| method_description.to_hash(lang) }
+                  @methods.map { |_key, method_description| method_description.docs(section, lang) }
                 else
-                  [@methods[method_name.to_sym].to_hash(lang)]
+                  [@methods[method_name.to_sym].docs(section, lang)]
                 end
       {
-        doc_url: doc_url,
+        doc_url: doc_url(section),
         dsl_url: dsl_url,
         name: @name,
         short_description: ApipieDSL.translate(@short_description, lang),
         full_description: ApipieDSL.translate(@full_description, lang),
         version: version,
         metadata: @metadata,
-        properties: property_descriptions.map { |prop| prop.to_hash(lang) }.flatten,
+        properties: property_descriptions.map { |prop| prop.docs(lang) }.flatten,
         methods: methods,
         deprecated: @deprecated,
         show: @show

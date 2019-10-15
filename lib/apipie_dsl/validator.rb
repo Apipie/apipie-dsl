@@ -56,7 +56,7 @@ module ApipieDSL
         description
       end
 
-      def to_hash
+      def docs
         raise NotImplementedError
       end
 

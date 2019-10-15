@@ -71,25 +71,26 @@ module ApipieDSL
       klass.version
     end
 
-    def doc_url
+    def doc_url(section = nil)
       crumbs = []
       crumbs << @klass.version if ApipieDSL.configuration.version_in_url
+      crumbs << section if section
       crumbs << @klass.id
       crumbs << @name
       ApipieDSL.full_url(crumbs.join('/')).gsub('?', '%3F')
     end
 
-    def to_hash(lang = nil)
+    def docs(section = nil, lang = nil)
       {
-        doc_url: doc_url,
+        doc_url: doc_url(section),
         name: @name,
         full_description: ApipieDSL.translate(@full_description, lang),
         short_description: ApipieDSL.translate(@short_description, lang),
-        params: param_descriptions.map { |param| param.to_hash(lang) }.flatten,
-        raises: raises.map(&:to_hash),
-        returns: @returns.to_hash(lang),
+        params: param_descriptions.map { |param| param.docs(lang) }.flatten,
+        raises: raises.map(&:docs),
+        returns: @returns.docs(lang),
         metadata: @metadata,
-        see: see.map(&:to_hash),
+        see: see.map(&:docs),
         show: @show,
         examples: @examples
       }

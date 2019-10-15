@@ -22,7 +22,7 @@ module ApipieDSL
       @description = args[:desc] || args[:description] || args['desc'] || args['description']
     end
 
-    def to_hash
+    def docs
       { link: see_url, description: description }
     end
 

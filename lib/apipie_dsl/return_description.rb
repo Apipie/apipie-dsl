@@ -57,12 +57,12 @@ module ApipieDSL
         if %i[one_of array_of].include?(@return_type)
           @options[@return_type]
         else
-          data = params_ordered.map { |param| param.to_hash(lang) }
+          data = params_ordered.map { |param| param.docs(lang) }
           data.empty? ? nil : data
         end
       end
 
-      def to_hash(lang = nil)
+      def docs(lang = nil)
         {
           meta: @return_type,
           class: return_class,
@@ -92,10 +92,10 @@ module ApipieDSL
       @returns_object.params_ordered
     end
 
-    def to_hash(lang = nil)
+    def docs(lang = nil)
       {
         description: @description,
-        object: @returns_object.to_hash(lang)
+        object: @returns_object.docs(lang)
       }
     end
   end

@@ -18,9 +18,10 @@ module ApipieDSL
     @configuration ||= Configuration.new
   end
 
-  def self.docs(version = nil, class_name = nil, method_name = nil, lang = nil)
+  def self.docs(version = nil, class_name = nil, method_name = nil, lang = nil, section = nil)
     version ||= configuration.default_version
-    app.docs(version, class_name, method_name, lang)
+    section ||= configuration.default_section
+    app.docs(version, class_name, method_name, lang, section)
   end
 
   def self.debug(message)

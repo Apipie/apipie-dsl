@@ -8,7 +8,7 @@ module ApipieDSL
                   :default_locale, :class_full_names, :autoload_methods,
                   :dsl_classes_matcher, :sections, :authenticate, :authorize,
                   :use_cache
-    attr_writer   :validate_value, :ignored, :reload_dsl,
+    attr_writer   :validate_value, :ignored, :reload_dsl, :default_section,
                   :dsl_classes_matchers
     attr_reader   :app_info, :dsl_base_url
 
@@ -56,6 +56,10 @@ module ApipieDSL
       @reload_dsl && !dsl_classes_matchers.empty?
     end
 
+    def default_section
+      @default_section || @sections.first
+    end
+
     def initialize
       @markup = ApipieDSL::Markup::RDoc.new
       @app_name = 'Another DOC'
@@ -79,7 +83,8 @@ module ApipieDSL
       @autoload_methods = false
       @dsl_classes_matcher = ''
       @dsl_classes_matchers = []
-      @sections = [:all]
+      @sections = ['all']
+      @default_section = nil
     end
   end
 end

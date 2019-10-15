@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'apipie_dsl/tasks_utils'
+
 module ApipieDslHelper
   include ActionView::Helpers::TagHelper
 
@@ -57,7 +59,12 @@ module ApipieDslHelper
   def in_section?(section, klass)
     class_desc = ApipieDSL.get_class_description(klass)
     raise ApipieDSL::Error, "Cannot find #{klass} description" if class_desc.nil?
+    return true if section.empty?
 
     class_desc.sections.include?(section)
+  end
+
+  def section_ext(section)
+    "/#{section}"
   end
 end

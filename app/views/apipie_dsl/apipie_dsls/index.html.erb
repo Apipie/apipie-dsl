@@ -1,14 +1,14 @@
 <ul class='breadcrumb'>
   <% dsl_sections.each do |section| %>
     <% if section == @section %>
-      <li class='active'><a href='<%= @doc[:doc_url] %><%= "-sec-#{section}"%><%= @doc[:link_extension] %>'><%= t("apipie_dsl.#{@section}") %></a></li>
+      <li class='active'><a href='<%= @doc[:doc_url] %><%= section_ext(section) %><%= @doc[:link_extension] %>'><%= t("apipie_dsl.#{@section}") %></a></li>
     <% else %>
-      <li><a href='<%= @doc[:doc_url] %><%= "-sec-#{section}"%><%= @doc[:link_extension] %>'><%= t("apipie_dsl.#{section}") %></a></li>
+      <li><a href='<%= @doc[:doc_url] %><%= section_ext(section) %><%= @doc[:link_extension] %>'><%= t("apipie_dsl.#{section}") %></a></li>
     <% end %>
   <% end %>
 </ul>
 <ul class='breadcrumb'>
-  <li class='active'><a href='<%= @doc[:doc_url] %><%= "-sec-#{@section}" %><%= @doc[:link_extension] %>'><%= @doc[:name] %> <%= @doc[:classes].values.first && @doc[:classes].values.first[:version] %></a></li>
+  <li class='active'><a href='<%= @doc[:doc_url] %><%= section_ext(@section) %><%= @doc[:link_extension] %>'><%= @doc[:name] %> <%= @doc[:classes].values.first && @doc[:classes].values.first[:version] %></a></li>
   <%= render(:partial => 'languages', :locals => {:doc_url => @doc[:doc_url]}) %>
   <% if @versions && @versions.size > 1 %>
   <li class='pull-right'>
