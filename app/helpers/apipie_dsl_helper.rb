@@ -67,4 +67,8 @@ module ApipieDslHelper
   def section_ext(section)
     "/#{section}"
   end
+
+  def render_help
+    render template: ApipieDSL.configuration.help_layout
+  end
 end

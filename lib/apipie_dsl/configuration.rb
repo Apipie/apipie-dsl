@@ -10,7 +10,7 @@ module ApipieDSL
                   :use_cache
     attr_writer   :validate_value, :ignored, :reload_dsl, :default_section,
                   :dsl_classes_matchers
-    attr_reader   :app_info
+    attr_reader   :app_info, :help_layout
 
     alias_method :validate?, :validate
     alias_method :class_full_names?, :class_full_names
@@ -53,6 +53,10 @@ module ApipieDSL
 
     def default_section
       @default_section || @sections.first
+    end
+
+    def help_layout=(layout)
+      @help_layout = layout
     end
 
     def initialize

@@ -6,6 +6,12 @@
       <li><a href='<%= @doc[:doc_url] %><%= section_ext(section) %><%= @doc[:link_extension] %>'><%= t("apipie_dsl.#{section}") %></a></li>
     <% end %>
   <% end %>
+  <% unless ApipieDSL.configuration.help_layout.nil? %>
+    <li class='pull-right'>
+      <% section = 'help' %>
+      <a href='<%= @doc[:doc_url] %><%= section_ext(section) %><%= @doc[:link_extension] %>'><%= t("apipie_dsl.#{section}") %></a>
+    </li>
+  <% end %>
 </ul>
 <ul class='breadcrumb'>
   <li class='active'><a href='<%= @doc[:doc_url] %><%= section_ext(@section) %><%= @doc[:link_extension] %>'><%= @doc[:name] %> <%= @doc[:classes].values.first && @doc[:classes].values.first[:version] %></a></li>

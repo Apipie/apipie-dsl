@@ -30,6 +30,8 @@ namespace :apipie_dsl do
             ApipieDSL.url_prefix = "../../../#{subdir}"
             ApipieDSL::TasksUtils.generate_method_pages(args[:version], section_out, doc, false, lang)
           end
+          ApipieDSL.url_prefix = "../#{subdir}"
+          ApipieDSL::TasksUtils.generate_help_page(out, doc, false, lang)
         end
       end
     end

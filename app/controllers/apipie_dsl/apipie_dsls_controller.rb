@@ -82,6 +82,8 @@ module ApipieDsl
             render 'class'
           elsif params[:class].present? || params[:method].present?
             render 'apipie_dsl_404', status: 404
+          elsif @section == 'help'
+            render 'custom_help'
           else
             render 'index'
           end
