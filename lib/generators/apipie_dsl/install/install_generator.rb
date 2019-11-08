@@ -10,12 +10,6 @@ module ApipieDSL
                  desc: 'What path should be the doc available on',
                  default: '/apipie-dsl')
 
-    class_option(:dsl_path,
-                 alias: '-d',
-                 type: :string,
-                 desc: 'What path are DSL requests on',
-                 default: '/dsl')
-
     def create_initializer
       template 'initializer.rb.erb', 'config/initializers/apipie_dsl.rb'
     end

@@ -45,9 +45,6 @@ language for full descriptions.
 
   - __doc_base_url__ - Documentation frontend base url.
 
-  - __dsl_base_url__ - Base url for default version of your DSL. To set it for
-    specific version use `config.dsl_base_url[version] = url`.
-
   - __default_version__ - Default DSL version to be used (1.0 by default).
 
   - __sections__ - What sections should the HTML documentation have
@@ -103,7 +100,6 @@ ApipieDSL.configure do |config|
   config.app_name = "Test app"
   config.copyright = "&copy; 2019 Oleh Fedorenko"
   config.doc_base_url = "/apipie-dsl"
-  config.dsl_base_url = "/dsl"
   config.validate = false
   config.markup = ApipieDSL::Markup::Markdown.new
   config.dsl_controllers_matchers = [

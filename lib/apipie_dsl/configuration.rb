@@ -10,7 +10,7 @@ module ApipieDSL
                   :use_cache
     attr_writer   :validate_value, :ignored, :reload_dsl, :default_section,
                   :dsl_classes_matchers
-    attr_reader   :app_info, :dsl_base_url
+    attr_reader   :app_info
 
     alias_method :validate?, :validate
     alias_method :class_full_names?, :class_full_names
@@ -28,11 +28,6 @@ module ApipieDSL
     def ignored
       @ignored ||= []
       @ignored.map(&:to_s)
-    end
-
-    def dsl_base_url=(url)
-      version = ApipieDSL.configuration.default_version
-      @dsl_base_url[version] = url
     end
 
     def app_info=(description)
@@ -67,7 +62,6 @@ module ApipieDSL
       @copyright = nil
       @validate = :implicitly
       @validate_value = true
-      @dsl_base_url = {}
       @doc_base_url = '/apipie-dsl'
       @layout = 'apipie_dsl/apipie_dsl'
       @default_version = '1.0'

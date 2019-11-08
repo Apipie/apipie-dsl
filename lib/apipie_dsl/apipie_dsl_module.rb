@@ -45,21 +45,7 @@ module ApipieDSL
     ApipieDSL.markup_to_html(info)
   end
 
-  def self.dsl_base_url(version = nil)
-    if dsl_base_url_version_valid?(version)
-      configuration.dsl_base_url[version]
-    elsif dsl_base_url_version_valid?(configuration.default_version)
-      configuration.dsl_base_url[configuration.default_version]
-    else
-      '/dsl'
-    end
-  end
-
   def self.app_info_version_valid?(version)
     version && configuration.app_info.key?(version)
-  end
-
-  def self.dsl_base_url_version_valid?(version)
-    version && configuration.dsl_base_url.key?(version)
   end
 end

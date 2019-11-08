@@ -24,7 +24,6 @@ module ApipieDSL
       @short_description = dsl_data[:short_description]
       @tag_list = dsl_data[:tag_list]
       @metadata = dsl_data[:meta]
-      @dsl_base_url = dsl_data[:dsl_base_url]
       @deprecated = dsl_data[:deprecated] || false
       @show = dsl_data[:show]
       @properties = dsl_data[:properties].map do |args|
@@ -45,10 +44,6 @@ module ApipieDSL
 
     def version
       @version || @parent.try(:version) || ApipieDSL.configuration.default_version
-    end
-
-    def dsl_base_url
-      @dsl_base_url || @parent.try(:dsl_base_url) || ApipieDSL.dsl_base_url(version)
     end
 
     def add_method_description(method_description)
@@ -82,10 +77,6 @@ module ApipieDSL
       ApipieDSL.full_url(crumbs.join('/'))
     end
 
-    def dsl_url
-      "#{ApipieDSL.dsl_base_url(version)}#{@path}"
-    end
-
     def valid_method_name?(method_name)
       @methods.keys.map(&:to_s).include?(method_name.to_s)
     end
@@ -100,7 +91,6 @@ module ApipieDSL
                 end
       {
         doc_url: doc_url(section),
-        dsl_url: dsl_url,
         name: @name,
         short_description: ApipieDSL.translate(@short_description, lang),
         full_description: ApipieDSL.translate(@full_description, lang),

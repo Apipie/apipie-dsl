@@ -268,7 +268,6 @@ module ApipieDSL
           info: ApipieDSL.app_info(version, lang),
           copyright: ApipieDSL.configuration.copyright,
           doc_url: ApipieDSL.full_url(url_args),
-          dsl_url: ApipieDSL.dsl_base_url(version),
           classes: {}
         }
       }
