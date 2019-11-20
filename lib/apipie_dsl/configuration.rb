@@ -77,7 +77,7 @@ module ApipieDSL
       @default_locale = 'en'
       @locale = lambda { |_locale| @default_locale }
       @translate = lambda { |str, _locale| str }
-      @class_full_names = false
+      @class_full_names = true
       @autoload_methods = false
       @dsl_classes_matcher = ''
       @dsl_classes_matchers = []

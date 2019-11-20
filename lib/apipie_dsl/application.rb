@@ -64,7 +64,10 @@ module ApipieDSL
         class_name_with_version = "#{version}##{get_class_name(klass)}"
         class_description = get_class_description(class_name_with_version)
 
-        class_description = define_class_description(klass, version) if class_description.nil?
+        if class_description.nil?
+          class_dsl_data = { sections: [ApipieDSL.configuration.default_section] }
+          class_description = define_class_description(klass, version, class_dsl_data)
+        end
 
         method_description = ApipieDSL::MethodDescription.new(method_name, class_description, dsl_data)
 
@@ -79,15 +82,15 @@ module ApipieDSL
       ret_method_description
     end
 
-    def define_class_description(klass, version, dsl_data = nil)
+    def define_class_description(klass, version, dsl_data = {})
       return if ignored?(klass)
 
-      class_name = get_class_name(klass)
+      class_name = dsl_data[:class_name] || get_class_name(klass)
       class_description = @class_descriptions[version][class_name]
       if class_description
         # Already defined the class somewhere (probably in
         # some method. Updating just meta data from dsl
-        class_description.update_from_dsl_data(dsl_data) if dsl_data
+        class_description.update_from_dsl_data(dsl_data) unless dsl_data.empty?
       else
         class_description = ApipieDSL::ClassDescription.new(klass, class_name, dsl_data, version)
         ApipieDSL.debug("@class_descriptions[#{version}][#{class_name}] = #{class_description}")

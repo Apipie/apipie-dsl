@@ -25,8 +25,8 @@ module ApipieDSL
       @tag_list = dsl_data[:tag_list]
       @metadata = dsl_data[:meta]
       @deprecated = dsl_data[:deprecated] || false
-      @show = dsl_data[:show]
-      @properties = dsl_data[:properties].map do |args|
+      @show = dsl_data[:show] || @show
+      @properties = (dsl_data[:properties] || []).map do |args|
         ApipieDSL::ParameterDescription.from_dsl_data(self, args)
       end
       @refs = dsl_data[:refs] || [@name]
@@ -90,8 +90,9 @@ module ApipieDSL
                   [@methods[method_name.to_sym].docs(section, lang)]
                 end
       {
-        doc_url: doc_url(section),
+        id: id,
         name: @name,
+        doc_url: doc_url(section),
         short_description: ApipieDSL.translate(@short_description, lang),
         full_description: ApipieDSL.translate(@full_description, lang),
         version: version,

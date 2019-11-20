@@ -2,6 +2,21 @@
 
 module ApipieDSL
   module Validator
+    class Lazy
+      def initialize(param_description, argument, options, block)
+        @param_description = param_description
+        @argument = argument
+        @options = options
+        @block = block
+      end
+
+      def build
+        # TODO support for plain Ruby
+        return unless defined? Rails
+
+        BaseValidator.find(@param_description, @argument.constantize, @options, @block)
+      end
+    end
     # To create a new validator, inherit from ApipieDSL::Validator::BaseValidator
     # and implement class method 'build' and instance method 'validate'
     class BaseValidator

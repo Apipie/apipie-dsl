@@ -7,7 +7,7 @@ module ApipieDSL
   # desc - description
   # validator - Validator::BaseValidator subclass
   class ParameterDescription
-    attr_reader :name, :desc, :type, :validator, :options, :method_description,
+    attr_reader :name, :desc, :type, :options, :method_description,
                 :metadata, :show, :is_array, :default_value
     attr_accessor :parent
 
@@ -56,13 +56,23 @@ module ApipieDSL
 
       return unless validator
 
-      @validator = ApipieDSL::Validator::BaseValidator.find(self, validator, @options, block)
+      @validator = if validator.is_a?(String)
+        ApipieDSL::Validator::Lazy.new(self, validator, @options, block)
+      else
+        ApipieDSL::Validator::BaseValidator.find(self, validator, @options, block)
+      end
       raise StandardError, "Validator for #{validator} not found." unless @validator
     end
     # rubocop:enable Metrics/ParameterLists
 
+    def validator
+      return @validator unless @validator.is_a?(ApipieDSL::Validator::Lazy)
+
+      @validator = @validator.build
+    end
+
     def validate(value)
-      @validator.valid?(value)
+      validator.valid?(value)
     end
 
     def full_name

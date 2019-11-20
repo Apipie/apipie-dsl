@@ -31,7 +31,7 @@ module ApipieDslHelper
       default = resolve_default(param[:default])
       case param[:type]
       when 'required'
-        param[:name]
+        param[:name].to_s
       when 'optional'
         "#{param[:name]} = #{default}"
       when 'keyword'
