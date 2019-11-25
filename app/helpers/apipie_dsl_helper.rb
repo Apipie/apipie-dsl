@@ -49,7 +49,7 @@ module ApipieDslHelper
     referenced = ApipieDSL.refs[version][ApipieDSL.get_class_name(obj)]
     return obj.to_s if referenced.nil?
 
-    "<a href='" + referenced.doc_url + link_extension + "'>#{obj.to_s.html_safe}</a>"
+    "<a href='" + referenced.doc_url(referenced.sections.first) + link_extension + "'>#{obj.to_s.html_safe}</a>"
   end
 
   def dsl_sections

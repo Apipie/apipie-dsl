@@ -45,8 +45,32 @@
   <%= render(:partial => 'metadata', :locals => {:meta => @klass[:metadata]}) %>
 <% end %>
 
-<div class='accordion' id='accordion'>
+<div class='accordion' id='prop-accordion'>
+  <% @klass[:properties].each do |prop| %>
+    <% if !prop[:show] %>
+      <% next %>
+    <% end %>
+    <hr>
+    <div>
+      <h2>
+        <a href='#description-<%= escaped_method_name(prop[:name], '_') %>'
+         class='accordion-toggle'
+         data-toggle='collapse'
+         data-parent='#prop-accordion'>
+          <%= prop[:name] %>
+        </a>
+        <br>
+        <small><%= raw prop[:description] %></small>
+      </h2>
+    </div>
 
+    <div id='description-<%= escaped_method_name(prop[:name], '_') %>' class='collapse accordion-body'>
+      <%= render(partial: 'property_detail', locals: { property: prop, h_level: 3 }) %>
+    </div>
+  <% end %>
+</div>
+
+<div class='accordion' id='meth-accordion'>
   <% @klass[:methods].each do |meth| %>
     <% if !meth[:show] %>
       <% next %>
@@ -60,7 +84,7 @@
         <a href='#description-<%= escaped_method_name(meth[:name], '_') %>'
          class='accordion-toggle'
          data-toggle='collapse'
-         data-parent='#accordion'>
+         data-parent='#meth-accordion'>
           <%= method_signature(meth) %>
         </a>
         <% if meth[:deprecated] %>

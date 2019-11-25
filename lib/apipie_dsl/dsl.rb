@@ -198,7 +198,9 @@ module ApipieDSL
 
       raise ArgumentError, 'Block can be specified for Hash return type only' if block && (options[:object_of] != Hash)
 
-      dsl_data[:returns] = [options, block]
+      data = [options, block]
+      dsl_data[:returns] = data unless options[:property]
+      data
     end
 
     # Reference other similar method
@@ -260,13 +262,16 @@ module ApipieDSL
       dsl_data[:sections] = only - except
     end
 
-    def property(name, validator, desc_or_options = nil, options = {}, &block)
-      options[:type] = :property
-      dsl_data[:properties] << [name,
-                                validator,
-                                desc_or_options,
-                                options,
-                                block]
+    def property(name, retobj_or_options, desc_or_options = nil, options = {}, &block)
+      if desc_or_options.is_a?(Hash)
+        options.merge!(desc_or_options)
+      elsif !desc_or_options.nil?
+        options[:desc] = desc_or_options
+      end
+
+      options[:property] = true
+      returns = returns(retobj_or_options, desc_or_options, options, &block)
+      dsl_data[:properties] << [name, { returns: returns }]
     end
   end
 

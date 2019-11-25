@@ -14,17 +14,6 @@ module ApipieDSL
         @return_type = (@options.keys & %i[array_of one_of object_of param_group]).first
 
         return unless @options[@return_type].is_a?(::Class)
-
-        if block && (@options[@return_type] == Hash)
-          instance_exec(&block)
-        else
-          class_description = ApipieDSL.get_class_description(@options[@return_type])
-          @params_ordered = if class_description.nil?
-                              []
-                            else
-                              class_description.property_descriptions
-                            end
-        end
       end
 
       # this routine overrides Param#default_param_group_scope
@@ -32,14 +21,6 @@ module ApipieDSL
       # during the instance_exec call in ReturnObject#initialize
       def default_param_group_scope
         @scope
-      end
-
-      def params_ordered
-        @params_ordered ||= dsl_data[:params].map do |args|
-          options = args.find { |arg| arg.is_a? Hash }
-          options[:param_group] = @param_group
-          ApipieDSL::ParameterDescription.from_dsl_data(@method_description, args)
-        end.compact
       end
 
       def return_class
@@ -53,20 +34,11 @@ module ApipieDSL
         end
       end
 
-      def return_data(lang = nil)
-        if %i[one_of array_of].include?(@return_type)
-          @options[@return_type]
-        else
-          data = params_ordered.map { |param| param.docs(lang) }
-          data.empty? ? nil : data
-        end
-      end
-
       def docs(lang = nil)
         {
           meta: @return_type,
           class: return_class,
-          data: return_data(lang)
+          data: @options[@return_type]
         }
       end
     end
@@ -88,9 +60,6 @@ module ApipieDSL
       @returns_object = ReturnObject.new(method_description, options, block)
     end
 
-    def params_ordered
-      @returns_object.params_ordered
-    end
 
     def docs(lang = nil)
       {

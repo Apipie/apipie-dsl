@@ -129,15 +129,10 @@ module ApipieDSL
     end
 
     def docs(lang = nil)
-      description = if type == :property
-                      desc
-                    else
-                      ApipieDSL.markup_to_html(ApipieDSL.translate(@options[:desc], lang))
-                    end
       hash = {
         name: name.to_s,
         full_name: full_name,
-        description: description,
+        description: ApipieDSL.markup_to_html(ApipieDSL.translate(@options[:desc], lang)),
         type: type.to_s,
         default: default_value,
         validator: validator.to_s,
@@ -145,7 +140,7 @@ module ApipieDSL
         metadata: metadata,
         show: show
       }
-      hash.delete(:default) if %i[required property].include?(type)
+      hash.delete(:default) if type == :required
       return hash unless validator.sub_params
 
       hash[:params] = validator.sub_params.map { |param| param.docs(lang) }

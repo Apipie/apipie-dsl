@@ -7,6 +7,11 @@ module ApipieDSL
                   :raises, :returns
     alias_method :class_description, :klass
 
+    def self.from_dsl_data(klass, args)
+      name, dsl_data = args
+      ApipieDSL::MethodDescription.new(name, klass, dsl_data)
+    end
+
     def initialize(name, klass, dsl_data)
       @name = name.to_s
       @klass = klass
@@ -16,13 +21,13 @@ module ApipieDSL
 
       @short_description = dsl_data[:short_description] || ''
 
-      @params = dsl_data[:params].map do |args|
+      @params = (dsl_data[:params] || []).map do |args|
         ApipieDSL::ParameterDescription.from_dsl_data(self, args)
       end
 
       @params = ApipieDSL::ParameterDescription.unify(@params)
 
-      @raises = dsl_data[:raises].map do |args|
+      @raises = (dsl_data[:raises] || []).map do |args|
         ApipieDSL::ExceptionDescription.from_dsl_data(args)
       end
 
@@ -33,13 +38,13 @@ module ApipieDSL
 
       @tag_list = dsl_data[:tag_list]
 
-      @see = dsl_data[:see].map do |args|
+      @see = (dsl_data[:see] || []).map do |args|
         ApipieDSL::SeeDescription.new(args)
       end
 
       @metadata = dsl_data[:meta]
 
-      @show = dsl_data[:show]
+      @show = dsl_data[:show].nil? ? true : dsl_data[:show]
 
       @examples = dsl_data[:examples]
     end

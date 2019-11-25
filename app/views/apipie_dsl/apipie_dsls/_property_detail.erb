@@ -1,0 +1,35 @@
+<% unless property[:metadata].blank? %>
+  <%= heading(t('apipie_dsl.metadata'), h_level) %>
+  <%= render(partial: 'metadata', locals: { meta: property[:metadata] }) %>
+<% end %>
+
+<% unless property[:params].blank? %>
+  <%= heading(t('apipie_dsl.params'), h_level) %>
+  <table class='table'>
+    <thead>
+      <tr>
+        <th><%= t('apipie_dsl.param_name') %></th>
+        <th><%= t('apipie_dsl.description') %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <%= render(partial: 'params', locals: { params: property[:params] }) %>
+    </tbody>
+  </table>
+<% end %>
+
+<%= heading(t('apipie_dsl.returns'), h_level) %>
+<% if property[:returns][:description] %>
+  <p><%= property[:returns][:description] %></p>
+<% end %>
+<table class='table'>
+  <thead>
+    <tr>
+      <th><%= t("apipie_dsl.#{property[:returns][:object][:class]}") %></th>
+      <th><%= t("apipie_dsl.details") %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <%= render(partial: 'returns', locals: { return_object: property[:returns][:object]}) %>
+  </tbody>
+</table>

@@ -27,7 +27,7 @@ module ApipieDSL
       @deprecated = dsl_data[:deprecated] || false
       @show = dsl_data[:show] || @show
       @properties = (dsl_data[:properties] || []).map do |args|
-        ApipieDSL::ParameterDescription.from_dsl_data(self, args)
+        ApipieDSL::MethodDescription.from_dsl_data(self, args)
       end
       @refs = dsl_data[:refs] || [@name]
       @sections = dsl_data[:sections] || @sections
@@ -66,7 +66,7 @@ module ApipieDSL
     end
 
     def property_descriptions
-      @properties.select(&:validator)
+      @properties
     end
 
     def doc_url(section = nil)
@@ -85,7 +85,7 @@ module ApipieDSL
       raise "Method #{method_name} not found for class #{id}" if method_name && !valid_method_name?(method_name)
 
       methods = if method_name.nil?
-                  @methods.map { |_key, method_description| method_description.docs(section, lang) }
+                  @methods.map { |_key, method_desc| method_desc.docs(section, lang) }
                 else
                   [@methods[method_name.to_sym].docs(section, lang)]
                 end
@@ -97,7 +97,7 @@ module ApipieDSL
         full_description: ApipieDSL.translate(@full_description, lang),
         version: version,
         metadata: @metadata,
-        properties: property_descriptions.map { |prop| prop.docs(lang) }.flatten,
+        properties: @properties.map { |prop_desc| prop_desc.docs(section, lang) },
         methods: methods,
         deprecated: @deprecated,
         show: @show
