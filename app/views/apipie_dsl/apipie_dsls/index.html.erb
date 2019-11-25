@@ -14,7 +14,7 @@
   <% end %>
 </ul>
 <ul class='breadcrumb'>
-  <li class='active'><a href='<%= @doc[:doc_url] %><%= section_ext(@section) %><%= @doc[:link_extension] %>'><%= @doc[:name] %> <%= @doc[:classes].values.first && @doc[:classes].values.first[:version] %></a></li>
+  <li class='active'><a href='<%= @doc[:doc_url] %><%= section_ext(@section) %><%= @doc[:link_extension] %>'><%= @doc[:name] %> <%= current_version(@doc[:classes]) %></a></li>
   <%= render(:partial => 'languages', :locals => {:doc_url => @doc[:doc_url]}) %>
   <% if @versions && @versions.size > 1 %>
   <li class='pull-right'>
@@ -54,12 +54,14 @@
           <% end %>
           <tr>
             <td>
-              <a href='#'><%= prop[:name] %></a>
+              <a href='<%= klass[:doc_url] %><%= @doc[:link_extension] %>#link-description-<%= escaped_method_name(prop[:name], '_') %>'>
+                <%= prop[:name] %>
+              </a>
               <% if prop[:deprecated] %>
                 <code>DEPRECATED</code>
               <% end %>
             </td>
-            <td width='60%'><%= prop[:description] %></td>
+            <td width='60%'><%= prop[:short_description] %></td>
           </tr>
         <% end %>
       </tbody>

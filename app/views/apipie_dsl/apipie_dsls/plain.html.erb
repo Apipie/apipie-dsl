@@ -2,6 +2,11 @@
   <% next unless klass[:show] %>
   <h4><a href='#<%= key %>'><%= klass[:name] %></a></h4>
   <ul>
+    <% klass[:properties].each do |prop| %>
+      <% next unless prop[:show] %>
+      <li><a href='#<%= key %>-<%= prop[:name] %>'><%= prop[:name] %></a></li>
+    <% end %>
+
     <% klass[:methods].each do |method| %>
       <% next unless method[:show] %>
       <li><a href='#<%= key %>-<%= method[:name] %>'><%= method[:name] %></a></li>
@@ -24,6 +29,43 @@
   <% end %>
 
   <div>
+    <% klass[:properties].each do |prop| %>
+      <% next unless prop[:show] %>
+      <hr/>
+
+      <h3 id="<%= "#{key}-#{prop[:name]}" %>">
+      <a href='#<%= key %>'><%= klass[:name] %></a> / <a href='#<%= "#{key}-#{prop[:name]}" %>'><%= prop[:name] %></a>
+      </h3>
+
+      <div>
+        <%= raw prop[:short_description] %>
+        <% unless prop[:examples].blank? %>
+          <h4><%= t('apipie_dsl.examples') %></h4>
+          <% prop[:examples].each do |example| %>
+            <pre class="wiki"><%= example %></pre>
+          <% end %>
+        <% end %>
+
+        <% unless prop[:returns].blank? %>
+          <h2><%= t('apipie_dsl.returns') %></h2>
+          <% if prop[:returns][:description] %>
+            <p><%= prop[:returns][:description] %></p>
+          <% end %>
+          <table class='table'>
+            <thead>
+              <tr>
+                <th><%= t("apipie_dsl.#{prop[:returns][:object][:class]}") %></th>
+                <th><%= t('apipie_dsl.details') %></th>
+              </tr>
+            </thead>
+            <tbody>
+              <%= render(partial: 'returns', locals: { return_object: prop[:returns][:object] }) %>
+            </tbody>
+          </table>
+        <% end %>
+      </div>
+    <% end %>
+
     <% klass[:methods].each do |method| %>
       <% next unless method[:show] %>
       <hr/>
@@ -42,18 +84,31 @@
         <% end %>
 
         <% unless method[:raises].blank? %>
-          <h4><%= t('apipie_dsl.raises') %></h4>
-          <% method[:raises].each do |err| %>
-            <%= err[:code] %>
-            <%= err[:description] %>
-            <%= render(:partial => 'metadata', :locals => {:meta => err[:metadata]}) %>
-            <br>
-          <% end %>
+          <h2><%= t('apipie_dsl.raises') %></h2>
+          <%= render(partial: 'raises', locals: { raises: method[:raises] }) %>
         <% end %>
 
         <% unless method[:params].blank? %>
           <h4><%= t('apipie_dsl.params') %></h4>
           <%= render(:partial => 'params_plain', :locals => {:params => method[:params]}) %>
+        <% end %>
+
+        <% unless method[:returns].blank? %>
+          <h2><%= t('apipie_dsl.returns') %></h2>
+          <% if method[:returns][:description] %>
+            <p><%= method[:returns][:description] %></p>
+          <% end %>
+          <table class='table'>
+            <thead>
+              <tr>
+                <th><%= t("apipie_dsl.#{method[:returns][:object][:class]}") %></th>
+                <th><%= t('apipie_dsl.details') %></th>
+              </tr>
+            </thead>
+            <tbody>
+              <%= render(partial: 'returns', locals: { return_object: method[:returns][:object] }) %>
+            </tbody>
+          </table>
         <% end %>
       </div>
     <% end %>

@@ -271,7 +271,11 @@ module ApipieDSL
 
       options[:property] = true
       returns = returns(retobj_or_options, desc_or_options, options, &block)
-      dsl_data[:properties] << [name, { returns: returns }]
+      prop_dsl_data = {
+        short_description: options[:desc],
+        returns: returns
+      }
+      dsl_data[:properties] << [name, prop_dsl_data]
     end
   end
 

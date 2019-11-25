@@ -45,65 +45,89 @@
   <%= render(:partial => 'metadata', :locals => {:meta => @klass[:metadata]}) %>
 <% end %>
 
-<div class='accordion' id='prop-accordion'>
-  <% @klass[:properties].each do |prop| %>
-    <% if !prop[:show] %>
-      <% next %>
-    <% end %>
-    <hr>
-    <div>
-      <h2>
-        <a href='#description-<%= escaped_method_name(prop[:name], '_') %>'
-         class='accordion-toggle'
-         data-toggle='collapse'
-         data-parent='#prop-accordion'>
-          <%= prop[:name] %>
-        </a>
-        <br>
-        <small><%= raw prop[:description] %></small>
-      </h2>
-    </div>
+<% unless @klass[:properties].empty? %>
+  <table class='table'>
+    <thead>
+      <tr>
+        <th><%= t('apipie_dsl.property') %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <div class='accordion' id='prop-accordion'>
+        <% @klass[:properties].each do |prop| %>
+          <% next unless prop[:show] %>
+          <tr>
+            <td>
+              <div>
+                <h2>
+                  <a id='link-description-<%= escaped_method_name(prop[:name], '_') %>' href='#description-<%= escaped_method_name(prop[:name], '_') %>'
+                   class='accordion-toggle'
+                   data-toggle='collapse'
+                   data-parent='#prop-accordion'>
+                    <%= prop[:name] %>
+                  </a>
+                  <br>
+                  <small><%= raw prop[:short_description] %></small>
+                </h2>
+              </div>
 
-    <div id='description-<%= escaped_method_name(prop[:name], '_') %>' class='collapse accordion-body'>
-      <%= render(partial: 'property_detail', locals: { property: prop, h_level: 3 }) %>
-    </div>
-  <% end %>
-</div>
-
-<div class='accordion' id='meth-accordion'>
-  <% @klass[:methods].each do |meth| %>
-    <% if !meth[:show] %>
-      <% next %>
-    <% end %>
-    <hr>
-    <div class='pull-right small'>
-      <a href='<%= meth[:doc_url] %><%= @doc[:link_extension] %>'> >>> </a>
-    </div>
-    <div>
-      <h2>
-        <a href='#description-<%= escaped_method_name(meth[:name], '_') %>'
-         class='accordion-toggle'
-         data-toggle='collapse'
-         data-parent='#meth-accordion'>
-          <%= method_signature(meth) %>
-        </a>
-        <% if meth[:deprecated] %>
-          <code>DEPRECATED</code>
+              <div id='description-<%= escaped_method_name(prop[:name], '_') %>' class='collapse accordion-body'>
+                <%= render(partial: 'property_detail', locals: { property: prop, h_level: 3 }) %>
+              </div>
+            </td>
+          </tr>
         <% end %>
-        <br>
-        <small><%= raw meth[:short_description] %></small>
-      </h2>
-    </div>
+      </div>
+    </tbody>
+  </table>
+<% end %>
 
-    <% unless meth[:see].empty? %>
-      Also see <%= meth[:see].map { |s| link_to(s[:description], "#{s[:link]}#{@doc[:link_extension]}") }.to_sentence.html_safe %>.
-    <% end %>
+<% unless @klass[:methods].empty? %>
+  <table class='table'>
+    <thead>
+      <tr>
+        <th><%= t('apipie_dsl.method') %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <div class='accordion' id='meth-accordion'>
+        <% @klass[:methods].each do |meth| %>
+          <% next unless meth[:show] %>
+          <tr>
+            <td>
+              <div class='pull-right small'>
+                <a href='<%= meth[:doc_url] %><%= @doc[:link_extension] %>'> >>> </a>
+              </div>
+              <div>
+                <h2>
+                  <a href='#description-<%= escaped_method_name(meth[:name], '_') %>'
+                   class='accordion-toggle'
+                   data-toggle='collapse'
+                   data-parent='#meth-accordion'>
+                    <%= method_signature(meth) %>
+                  </a>
+                  <% if meth[:deprecated] %>
+                    <code>DEPRECATED</code>
+                  <% end %>
+                  <br>
+                  <small><%= raw meth[:short_description] %></small>
+                </h2>
+              </div>
 
-    <div id='description-<%= escaped_method_name(meth[:name], '_') %>' class='collapse accordion-body'>
-      <%= render(:partial => 'method_detail', :locals => {:method => meth, :h_level => 3}) %>
-    </div>
-  <% end %>
-</div>
+              <% unless meth[:see].empty? %>
+                Also see <%= meth[:see].map { |s| link_to(s[:description], "#{s[:link]}#{@doc[:link_extension]}") }.to_sentence.html_safe %>.
+              <% end %>
+
+              <div id='description-<%= escaped_method_name(meth[:name], '_') %>' class='collapse accordion-body'>
+                <%= render(:partial => 'method_detail', :locals => {:method => meth, :h_level => 3}) %>
+              </div>
+            </td>
+          </tr>
+        <% end %>
+      </div>
+    </tbody>
+  </table>
+<% end %>
 
 <% unless content_for(:apipie_dsl_footer) == @doc[:copyright] %>
   <%= content_for :apipie_dsl_footer, raw(@doc[:copyright]) %>

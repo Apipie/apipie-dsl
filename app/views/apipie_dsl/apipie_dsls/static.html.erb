@@ -2,6 +2,11 @@
   <% next unless klass[:show] %>
   <h4><a href='#<%= key %>'><%= klass[:name] %></a></h4>
   <ul>
+    <% klass[:properties].each do |prop| %>
+      <% next unless prop[:show] %>
+      <li><a href='#<%= key %>-<%= prop[:name] %>'><%= prop[:name] %></a></li>
+    <% end %>
+
     <% klass[:methods].each do |method| %>
       <% next unless method[:show] %>
       <li><a href='#<%= key %>-<%= method[:name] %>'><%= method[:name] %></a></li>
@@ -31,7 +36,55 @@
     <div><%= raw klass[:full_description] %></div>
   <% end %>
 
-  <div class='accordion' id='accordion'>
+  <div class='accordion' id='prop-accordion'>
+
+    <% klass[:properties].each do |prop| %>
+      <% next unless prop[:show] %>
+      <hr>
+
+      <ul class='breadcrumb' id='<%= key %>-<%= prop[:name] %>'>
+        <li>
+          <a href='#'><%= @doc[:name] %></a>
+          <span class='divider'>/</span>
+        </li>
+        <li>
+          <a href='#<%= key %>'><%= klass[:name] %></a>
+          <span class='divider'>/</span>
+        </li>
+        <li class='active'><%= prop[:name] %></li>
+      </ul>
+
+      <div>
+        <%= raw prop[:short_description] %>
+        <% unless prop[:examples].blank? %>
+          <h2><%= t('apipie_dsl.examples') %></h2>
+          <% prop[:examples].each do |example| %>
+            <pre><%= example %></pre>
+          <% end %>
+        <% end %>
+
+        <% unless prop[:returns].blank? %>
+          <h2><%= t('apipie_dsl.returns') %></h2>
+          <% if prop[:returns][:description] %>
+            <p><%= prop[:returns][:description] %></p>
+          <% end %>
+          <table class='table'>
+            <thead>
+              <tr>
+                <th><%= t("apipie_dsl.#{prop[:returns][:object][:class]}") %></th>
+                <th><%= t("apipie_dsl.details") %></th>
+              </tr>
+            </thead>
+            <tbody>
+              <%= render(partial: 'returns', locals: { return_object: prop[:returns][:object] }) %>
+            </tbody>
+          </table>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class='accordion' id='meth-accordion'>
 
     <% klass[:methods].each do |method| %>
       <% next unless method[:show] %>
@@ -74,6 +127,24 @@
             </thead>
             <tbody>
               <%= render(:partial => 'params', :locals => {:params => method[:params]}) %>
+            </tbody>
+          </table>
+        <% end %>
+
+        <% unless method[:returns].blank? %>
+          <h2><%= t('apipie_dsl.returns') %></h2>
+          <% if method[:returns][:description] %>
+            <p><%= method[:returns][:description] %></p>
+          <% end %>
+          <table class='table'>
+            <thead>
+              <tr>
+                <th><%= t("apipie_dsl.#{method[:returns][:object][:class]}") %></th>
+                <th><%= t('apipie_dsl.details') %></th>
+              </tr>
+            </thead>
+            <tbody>
+              <%= render(partial: 'returns', locals: { return_object: method[:returns][:object] }) %>
             </tbody>
           </table>
         <% end %>

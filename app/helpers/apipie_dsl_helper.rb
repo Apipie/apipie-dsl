@@ -68,6 +68,16 @@ module ApipieDslHelper
     "/#{section}"
   end
 
+  def current_version(classes)
+    if classes.is_a?(Array)
+      classes.first[:version]
+    elsif classes.is_a?(Hash)
+      classes.values.first[:version]
+    else
+      raise ApipieDSL::Error, "Cannot find current version for #{classes}"
+    end
+  end
+
   def render_help
     render template: ApipieDSL.configuration.help_layout
   end
