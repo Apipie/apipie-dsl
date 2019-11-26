@@ -163,6 +163,10 @@ module ApipieDSL
       dsl_data[:short_description] = desc
     end
 
+    def aliases(*names)
+      dsl_data[:aliases] = names
+    end
+
     # Describe possible errors
     #
     # Example:

@@ -1,3 +1,8 @@
+<% unless method[:aliases].blank? %>
+<%= heading(t('apipie_dsl.aliases'), h_level) %>
+  <pre class="prettyprint"><%= method[:aliases].join(', ') %></pre>
+<% end %>
+
 <%= raw method[:full_description] %>
 
 <% unless method[:raises].blank? %>

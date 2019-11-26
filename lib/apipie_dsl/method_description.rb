@@ -4,7 +4,7 @@ module ApipieDSL
   class MethodDescription
     attr_reader :name, :klass, :see, :examples
     attr_accessor :full_description, :short_description, :metadata, :show,
-                  :raises, :returns
+                  :raises, :returns, :aliases
     alias_method :class_description, :klass
 
     def self.from_dsl_data(klass, args)
@@ -47,6 +47,8 @@ module ApipieDSL
       @show = dsl_data[:show].nil? ? true : dsl_data[:show]
 
       @examples = dsl_data[:examples]
+
+      @aliases = dsl_data[:aliases]
     end
 
     def id
@@ -97,7 +99,8 @@ module ApipieDSL
         metadata: @metadata,
         see: see.map(&:docs),
         show: @show,
-        examples: @examples
+        examples: @examples,
+        aliases: aliases
       }
     end
   end
