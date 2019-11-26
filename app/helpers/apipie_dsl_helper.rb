@@ -43,7 +43,7 @@ module ApipieDslHelper
     "#{method_desc[:name]}(#{params.join(', ')})"
   end
 
-  def reference_for(obj, version, link_extension)
+  def class_reference(obj, version, link_extension)
     return obj.to_s unless [::Module, ::Class].include?(obj.class)
 
     referenced = ApipieDSL.refs[version][ApipieDSL.get_class_name(obj)]

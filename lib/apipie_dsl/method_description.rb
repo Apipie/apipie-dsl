@@ -39,7 +39,7 @@ module ApipieDSL
       @tag_list = dsl_data[:tag_list]
 
       @see = (dsl_data[:see] || []).map do |args|
-        ApipieDSL::SeeDescription.new(args)
+        ApipieDSL::SeeDescription.new(args, @klass)
       end
 
       @metadata = dsl_data[:meta]

@@ -47,7 +47,7 @@
     </td>
     <td>
       <% klass = return_object[:data].blank? ? return_object[:class] : return_object[:data] %>
-      <%= raw reference_for(klass, current_version(@doc[:classes]), @doc[:link_extension]) %>
+      <%= raw class_reference(klass, current_version(@doc[:classes]), @doc[:link_extension]) %>
     </td>
   </tr>
 <% end %>
