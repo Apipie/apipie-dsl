@@ -213,7 +213,8 @@ module ApipieDSL
     #   method :print
     #   see "MyIO#puts"
     #   def print; end
-    def see(*args)
+    def see(method, options = {})
+      args = [method, options]
       dsl_data[:see] << args
     end
 

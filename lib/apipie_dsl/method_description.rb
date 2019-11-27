@@ -38,8 +38,9 @@ module ApipieDSL
 
       @tag_list = dsl_data[:tag_list]
 
-      @see = (dsl_data[:see] || []).map do |args|
-        ApipieDSL::SeeDescription.new(args, @klass)
+      @see = (dsl_data[:see] || []).map do |method, options|
+        options[:scope] ||= @klass
+        ApipieDSL::SeeDescription.new(method, options)
       end
 
       @metadata = dsl_data[:meta]

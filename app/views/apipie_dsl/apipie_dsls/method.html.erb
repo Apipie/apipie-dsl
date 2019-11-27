@@ -42,7 +42,7 @@
 
 <div>
   <% unless @method[:see].empty? %>
-    Also see <%= @method[:see].map { |s| link_to(s[:description], "#{s[:link]}#{@doc[:link_extension]}") }.to_sentence.html_safe %>.
+    Also see <%= @method[:see].map { |s| link_to(s[:description] || s[:link], "#{s[:url]}#{@doc[:link_extension]}") }.to_sentence.html_safe %>.
   <% end %>
 
   <%= render(:partial => 'method_detail', :locals => {:method => @method, :h_level => 2}) %>
