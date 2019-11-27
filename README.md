@@ -76,7 +76,7 @@ language for full descriptions.
     `%w[DSL::Output DSL::HTML#tag]`).
 
   - __class_full_names__ - Use class paths instead of class names as class id.
-    This prevents same named classes overwriting each other.
+    This prevents same named classes overwriting each other (`true` by default).
 
   - __link_extension__ - The extension to use for DSL pages ('.html' by   
     default). Link extensions in static DSL docs cannot be changed from '.html'.
@@ -93,6 +93,8 @@ language for full descriptions.
   ```
   - __translate__ - Pass proc to translate strings using the localization
     library your project uses. For example see [Localization](#Localization).
+
+  - __help_layout__ - Pass path to a html with custom help section if needed.
 
 #### Example:
 ```ruby
@@ -476,3 +478,8 @@ TODO
 ### Static files
 
 TODO
+
+### Known issues
+ - __Circular dependency detected while autoloading constant...__
+   Can appear in Rails when using a non-standard class as a validator. Passing
+   the validator as a string (e.g. MyClass -> 'MyClass') solves the issue.
