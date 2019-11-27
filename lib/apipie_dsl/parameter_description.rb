@@ -49,6 +49,7 @@ module ApipieDSL
       @name = name
       @desc = @options[:desc]
       @type = @options[:type] || :required
+      @schema = @options[:schema]
       @default_value = @options[:default]
       @parent = @options[:parent]
       @metadata = @options[:meta]
@@ -141,6 +142,7 @@ module ApipieDSL
         show: show
       }
       hash.delete(:default) if type == :required
+      hash[:schema] = @schema if type == :block
       return hash unless validator.sub_params
 
       hash[:params] = validator.sub_params.map { |param| param.docs(lang) }

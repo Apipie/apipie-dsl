@@ -27,6 +27,8 @@ module ApipieDslHelper
   end
 
   def method_signature(method_desc)
+    return "#{method_desc[:name]}" if method_desc[:params].empty?
+
     params = method_desc[:params].map do |param|
       default = resolve_default(param[:default])
       case param[:type]
@@ -37,10 +39,14 @@ module ApipieDslHelper
       when 'keyword'
         "#{param[:name]}: #{default}"
       end
-    end
-    return "#{method_desc[:name]}" if params.empty?
+    end.join(', ')
 
-    "#{method_desc[:name]}(#{params.join(', ')})"
+    block_param = method_desc[:params].find { |p| p[:type] == 'block' }
+
+    signature_parts = [method_desc[:name]]
+    signature_parts << "(#{params})" unless params.empty?
+    signature_parts << " #{block_param[:schema]}" if block_param
+    signature_parts.join
   end
 
   def class_reference(obj, version, link_extension)

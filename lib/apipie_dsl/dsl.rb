@@ -117,9 +117,10 @@ module ApipieDSL
       param(name, validator, desc_or_options, options, &block)
     end
 
-    def block(name, validator, desc_or_options = nil, options = {}, &block)
+    def block(desc_or_options = nil, options = {}, &block)
       options[:type] = :block
-      param(name, validator, desc_or_options, options, &block)
+      name = options[:name] || :block
+      param(name, Proc, desc_or_options, options)
     end
 
     def define_param_group(name, &block)
@@ -378,6 +379,24 @@ module ApipieDSL
   module Module
     include ApipieDSL::Delegatable
 
+    def apipie_class(name, desc_or_options = nil, options = {}, &block)
+      delegatee = prepare_delegatee(self, desc_or_options, options, &block)
+      delegatee.name(name)
+      delegatee.with(options).eval_dsl_for(:class)
+
+      Delegatee.instance_reset
+    end
+
+    def apipie_method(name, desc_or_options = nil, options = {}, &block)
+      delegatee = prepare_delegatee(self, desc_or_options, options, &block)
+      dsl_data = delegatee.eval_dsl_for(:method)
+      class_scope = delegatee.class_scope
+      ApipieDSL.remove_method_description(class_scope, dsl_data[:dsl_versions], name)
+      ApipieDSL.define_method_description(class_scope, name, dsl_data)
+
+      Delegatee.instance_reset
+    end
+
     def apipie(context = :method, desc_or_options = nil, options = {}, &block)
       if desc_or_options.is_a?(Hash)
         options = options.merge(desc_or_options)
@@ -421,6 +440,21 @@ module ApipieDSL
       Delegatee.define_validators(class_scope, method_desc)
     ensure
       Delegatee.instance_reset
+    end
+
+    private
+
+    def prepare_delegatee(scope, desc_or_options, options, &block)
+      if desc_or_options.is_a?(Hash)
+        options = options.merge(desc_or_options)
+      elsif desc_or_options.is_a?(String)
+        options[:desc] = desc_or_options
+      end
+
+      block = proc {} unless block_given?
+      delegatee = Delegatee.instance_for(scope).with(&block)
+      delegatee.short(options[:desc])
+      delegatee
     end
   end
 
