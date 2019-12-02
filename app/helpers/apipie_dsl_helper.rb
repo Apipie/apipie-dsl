@@ -49,13 +49,20 @@ module ApipieDslHelper
     signature_parts.join
   end
 
-  def class_reference(obj, version, link_extension)
-    return obj.to_s unless [::Module, ::Class].include?(obj.class)
+  def class_references(obj, version, link_extension)
+    return obj.to_s unless [::Module, ::Class, ::Array].include?(obj.class)
 
-    referenced = ApipieDSL.refs[version][ApipieDSL.get_class_name(obj)]
-    return obj.to_s if referenced.nil?
+    refs = [obj].flatten.map do |o|
+      next o unless [::Module, ::Class].include?(o.class)
 
-    "<a href='" + referenced.doc_url(referenced.sections.first) + link_extension + "'>#{obj.to_s.html_safe}</a>"
+      referenced = ApipieDSL.refs[version][ApipieDSL.get_class_name(o)]
+      next o if referenced.nil?
+
+      "<a href='#{referenced.doc_url(referenced.sections.first)}#{link_extension}'>#{o}</a>"
+    end
+    return refs.first if refs.size < 2
+
+    refs
   end
 
   def dsl_sections

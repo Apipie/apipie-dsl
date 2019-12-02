@@ -46,8 +46,8 @@
       <strong><%= return_object[:meta] %> </strong><br>
     </td>
     <td>
-      <% klass = return_object[:data].blank? ? return_object[:class] : return_object[:data] %>
-      <%= raw class_reference(klass, current_version(@doc[:classes]), @doc[:link_extension]) %>
+      <% obj = return_object[:data].blank? ? return_object[:class] : return_object[:data] %>
+      <%= raw(class_references(obj, current_version(@doc[:classes]), @doc[:link_extension])).gsub('"', '').html_safe %>
     </td>
   </tr>
 <% end %>
