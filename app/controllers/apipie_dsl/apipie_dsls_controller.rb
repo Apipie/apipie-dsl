@@ -22,11 +22,6 @@ module ApipieDsl
 
       get_format
 
-      if params[:type].to_s == 'swagger' && params[:format].to_s == 'json'
-        head :forbidden and return if ApipieDSL.configuration.authorize
-        should_render_swagger = true
-      end
-
       respond_to do |format|
         if ApipieDSL.configuration.use_cache?
           render_from_cache
@@ -40,18 +35,8 @@ module ApipieDsl
 
         I18n.locale = @language
 
-        if should_render_swagger
-          prev_warning_value = ApipieDSL.configuration.swagger_suppress_warnings
-          begin
-            ApipieDSL.configuration.swagger_suppress_warnings = true
-            @doc = ApipieDSL.to_swagger_json(params[:version], params[:class], params[:method], @language)
-          ensure
-            ApipieDSL.configuration.swagger_suppress_warnings = prev_warning_value
-          end
-        else
-          @doc = ApipieDSL.docs(params[:version], params[:class], params[:method], @language, @section)
-          @doc = authorized_doc
-        end
+        @doc = ApipieDSL.docs(params[:version], params[:class], params[:method], @language, @section)
+        @doc = authorized_doc
 
         format.json do
           if @doc
