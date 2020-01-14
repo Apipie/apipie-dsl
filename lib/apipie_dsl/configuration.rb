@@ -9,12 +9,16 @@ module ApipieDSL
                   :dsl_classes_matcher, :sections, :authenticate, :authorize,
                   :use_cache, :app_info, :help_layout
     attr_writer   :validate_value, :ignored, :reload_dsl, :default_section,
-                  :dsl_classes_matchers
+                  :dsl_classes_matchers, :cache_dir
 
     alias_method :validate?, :validate
     alias_method :class_full_names?, :class_full_names
     alias_method :autoload_methods?, :autoload_methods
     alias_method :use_cache?, :use_cache
+
+    def cache_dir
+      @cache_dir ||= File.join(Rails.root, 'public', 'apipie-dsl-cache')
+    end
 
     def validate_value
       (validate? && @validate_value)

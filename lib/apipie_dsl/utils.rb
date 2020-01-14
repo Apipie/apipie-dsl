@@ -72,4 +72,12 @@ if RUBY_VERSION < '2.5.0'
     end
   end
 end
+if defined? Rails
+  class Module
+    # https://github.com/rails/rails/pull/35035
+    def as_json(options = nil)
+      name
+    end
+  end
+end
 # rubocop:enable Style/FrozenStringLiteralComment

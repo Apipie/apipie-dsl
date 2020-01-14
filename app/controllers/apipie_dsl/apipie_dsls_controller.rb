@@ -147,11 +147,12 @@ module ApipieDsl
     def render_from_cache
       path = ApipieDSL.configuration.doc_base_url.dup
       # some params can contain dot, but only one in row
-      if %i[class method format version].any? { |p| params[p].to_s.delete('.') =~ /\W/ || params[p].to_s =~ /\.\./ }
+      if %i[class method format version].any? { |p| params[p].to_s =~ /\.\./ }
         head :bad_request and return
       end
 
       path << '/' << params[:version] if params[:version].present?
+      path << '/' << params[:section] if params[:section].present?
       path << '/' << params[:class] if params[:class].present?
       path << '/' << params[:method] if params[:method].present?
       path << if params[:format].present?
