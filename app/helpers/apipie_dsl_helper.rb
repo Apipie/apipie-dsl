@@ -70,6 +70,10 @@ module ApipieDslHelper
   end
 
   def in_section?(section, klass)
+    ApipieDslHelper.in_section?(section, klass)
+  end
+
+  def self.in_section?(section, klass)
     class_desc = ApipieDSL.get_class_description(klass)
     raise ApipieDSL::Error, "Cannot find #{klass} description" if class_desc.nil?
     return true if section.empty?

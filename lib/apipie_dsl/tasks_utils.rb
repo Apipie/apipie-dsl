@@ -74,8 +74,10 @@ module ApipieDSL
       File.open("#{file_base}#{lang_ext(lang)}.json", 'w') { |f| f << doc.to_json } if include_json
     end
 
-    def self.generate_class_pages(version, file_base, doc, include_json = false, lang = nil)
+    def self.generate_class_pages(version, file_base, doc, include_json = false, lang = nil, section = nil)
       doc[:docs][:classes].each do |class_name, class_desc|
+        next unless ApipieDslHelper.in_section?(section, class_name)
+
         class_file_base = File.join(file_base, class_desc[:id])
         FileUtils.mkdir_p(File.dirname(class_file_base)) unless File.exist?(File.dirname(class_file_base))
 
@@ -88,8 +90,10 @@ module ApipieDSL
       end
     end
 
-    def self.generate_method_pages(version, file_base, doc, include_json = false, lang = nil)
+    def self.generate_method_pages(version, file_base, doc, include_json = false, lang = nil, section = nil)
       doc[:docs][:classes].each do |class_name, class_params|
+        next unless ApipieDslHelper.in_section?(section, class_name)
+
         class_params[:methods].each do |method|
           method_file_base = File.join(file_base, class_name.to_s, method[:name].to_s)
           FileUtils.mkdir_p(File.dirname(method_file_base)) unless File.exist?(File.dirname(method_file_base))

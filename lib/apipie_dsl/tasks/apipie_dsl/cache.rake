@@ -23,9 +23,9 @@ namespace :apipie_dsl do
             ApipieDSL::TasksUtils.generate_index_page(file_base_version, doc, true, true, lang, section)
             ApipieDSL.url_prefix = "../../../#{subdir}"
             section_out = "#{file_base_version}/#{section}"
-            ApipieDSL::TasksUtils.generate_class_pages(version, section_out, doc, true, lang)
+            ApipieDSL::TasksUtils.generate_class_pages(version, section_out, doc, true, lang, section)
             ApipieDSL.url_prefix = "../../../../#{subdir}"
-            ApipieDSL::TasksUtils.generate_method_pages(version, section_out, doc, true, lang)
+            ApipieDSL::TasksUtils.generate_method_pages(version, section_out, doc, true, lang, section)
           end
           ApipieDSL.url_prefix = "../../#{subdir}"
           doc = ApipieDSL.docs(version, nil, nil, lang)
