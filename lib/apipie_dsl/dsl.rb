@@ -342,8 +342,8 @@ module ApipieDSL
         class_scope.define_method(method_desc.name) do |*args|
           # apipie validations start
           if ApipieDSL.configuration.validate_value?
-            documented_params = ApipieDSL.get_method_description(ApipieDSL.get_class_name(self.class), __method__)
-                                         .param_descriptions
+            documented_params = (ApipieDSL.get_method_description(ApipieDSL.get_class_name(self.class), __method__)
+                                         .param_descriptions) || []
             param_values = old_params.each_with_object({}) { |param, values| values[param] = args.shift }
 
             documented_params.each do |param|
