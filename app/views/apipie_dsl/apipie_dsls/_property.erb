@@ -1,0 +1,24 @@
+<div class='accordion' id='prop-accordion'>
+    <% if prop[:show] %>
+    <tr>
+      <td>
+        <div>
+          <h2>
+            <a id='link-description-<%= escaped_method_name(prop[:name], '_') %>' href='#description-<%= escaped_method_name(prop[:name], '_') %>'
+             class='accordion-toggle'
+             data-toggle='collapse'
+             data-parent='#prop-accordion'>
+              <%= prop[:name] %>
+            </a>
+            <br>
+            <small><%= raw prop[:short_description] %></small>
+          </h2>
+        </div>
+
+        <div id='description-<%= escaped_method_name(prop[:name], '_') %>' class='collapse accordion-body'>
+          <%= render partial: 'property_detail', locals: { property: prop, h_level: 3 } %>
+        </div>
+      </td>
+    </tr>
+  <% end %>
+</div>

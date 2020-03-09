@@ -108,15 +108,15 @@ module ApipieDSL
           File.open("#{method_file_base}#{lang_ext(lang)}.json", 'w') { |f| f << doc.to_json } if include_json
         end
       end
+    end
 
-      def self.generate_help_page(file_base, doc, show_versions = false, lang = nil)
-        versions = show_versions && ApipieDSL.available_versions
-        section_file = "#{file_base}/help"
-        FileUtils.mkdir_p(File.dirname(section_file)) unless File.exist?(File.dirname(section_file))
-        render_page("#{section_file}#{lang_ext(lang)}.html", 'custom_help',
-                    doc: doc[:docs], versions: versions, language: lang,
-                    languages: ApipieDSL.configuration.languages, section: 'help')
-      end
+    def self.generate_help_page(file_base, doc, show_versions = false, lang = nil)
+      versions = show_versions && ApipieDSL.available_versions
+      section_file = "#{file_base}/help"
+      FileUtils.mkdir_p(File.dirname(section_file)) unless File.exist?(File.dirname(section_file))
+      render_page("#{section_file}#{lang_ext(lang)}.html", 'custom_help',
+      doc: doc[:docs], versions: versions, language: lang,
+      languages: ApipieDSL.configuration.languages, section: 'help')
     end
 
     def self.lang_ext(lang = nil)

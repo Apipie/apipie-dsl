@@ -5,9 +5,13 @@ require_relative '../../tasks_utils'
 namespace :apipie_dsl do
   desc 'Generate static documentation'
   if defined?(Rails)
-    task :static, [:version] => :environment do |_task, args|
+    task :static, [:version, :include_json] => :environment do |_task, args|
       ApipieDSL::TasksUtils.with_loaded_documentation do
-        args.with_defaults(version: ApipieDSL.configuration.default_version)
+        args.with_defaults(
+          version: ApipieDSL.configuration.default_version,
+          include_json: false
+        )
+        include_json = %w[1 true].include?(args[:include_json])
         out = ENV['OUT'] || File.join(::Rails.root, ApipieDSL.configuration.doc_path, 'dsldoc')
         subdir = File.basename(out)
         ApipieDSL::TasksUtils.copy_jscss(out)
@@ -23,12 +27,12 @@ namespace :apipie_dsl do
             ApipieDSL.url_prefix = "../#{subdir}"
             doc = ApipieDSL.docs(args[:version], nil, nil, lang, section)
             doc[:docs][:link_extension] = "#{lang_ext(lang)}.html"
-            ApipieDSL::TasksUtils.generate_index_page(out, doc, false, false, lang, section)
+            ApipieDSL::TasksUtils.generate_index_page(out, doc, include_json, false, lang, section)
             ApipieDSL.url_prefix = "../../#{subdir}"
             section_out = "#{out}/#{section}"
-            ApipieDSL::TasksUtils.generate_class_pages(args[:version], section_out, doc, false, lang, section)
+            ApipieDSL::TasksUtils.generate_class_pages(args[:version], section_out, doc, include_json, lang, section)
             ApipieDSL.url_prefix = "../../../#{subdir}"
-            ApipieDSL::TasksUtils.generate_method_pages(args[:version], section_out, doc, false, lang, section)
+            ApipieDSL::TasksUtils.generate_method_pages(args[:version], section_out, doc, include_json, lang, section)
           end
           ApipieDSL.url_prefix = "../#{subdir}"
           ApipieDSL::TasksUtils.generate_help_page(out, doc, false, lang)

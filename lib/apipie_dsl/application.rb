@@ -240,7 +240,7 @@ module ApipieDSL
     end
 
     def load_documentation
-      return if @documentation_loaded
+      return if @documentation_loaded && !ApipieDSL.configuration.reload_dsl?
 
       ApipieDSL.reload_documentation
       @documentation_loaded = true

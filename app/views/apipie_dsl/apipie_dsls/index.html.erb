@@ -27,7 +27,7 @@
 
 <h1 class='page-header'><%= t('apipie_dsl.classes') %></h1>
 
-<% @doc[:classes].sort_by(&:first).each do |_, klass| %>
+<% @doc[:classes].each_value do |klass| %>
   <% next unless klass[:show] && in_section?(@section, klass[:id]) %>
   <h2>
     <a href='<%= klass[:doc_url] %><%= @doc[:link_extension] %>'>
@@ -48,22 +48,7 @@
         </tr>
       </thead>
       <tbody>
-        <% klass[:properties].each do |prop| %>
-          <% if !prop[:show] %>
-            <% next %>
-          <% end %>
-          <tr>
-            <td>
-              <a href='<%= klass[:doc_url] %><%= @doc[:link_extension] %>#link-description-<%= escaped_method_name(prop[:name], '_') %>'>
-                <%= prop[:name] %>
-              </a>
-              <% if prop[:deprecated] %>
-                <code>DEPRECATED</code>
-              <% end %>
-            </td>
-            <td width='60%'><%= prop[:short_description] %></td>
-          </tr>
-        <% end %>
+        <%= render partial: 'index_class_prop', collection: klass[:properties], as: :prop, locals: { link_extension: @doc[:link_extension], doc_url: klass[:doc_url] } %>
       </tbody>
     </table>
   <% end %>
@@ -76,20 +61,7 @@
         </tr>
       </thead>
       <tbody>
-        <% klass[:methods].each do |meth| %>
-          <% if !meth[:show] %>
-            <% next %>
-          <% end %>
-          <tr>
-            <td>
-              <a href='<%= meth[:doc_url] %><%= @doc[:link_extension] %>'><%= meth[:name] %></a>
-              <% if meth[:deprecated] %>
-                <code>DEPRECATED</code>
-              <% end %>
-            </td>
-            <td width='60%'><%= meth[:short_description] %></td>
-          </tr>
-        <% end %>
+        <%= render partial: 'index_class_meth', collection: klass[:methods], as: :meth, locals: { link_extension: @doc[:link_extension] } %>
       </tbody>
     </table>
   <% end %>

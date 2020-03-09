@@ -1,0 +1,11 @@
+<% if meth[:show] %>
+  <tr>
+    <td>
+      <a href='<%= meth[:doc_url] %><%= link_extension %>'><%= meth[:name] %></a>
+      <% if meth[:deprecated] %>
+        <code>DEPRECATED</code>
+      <% end %>
+    </td>
+    <td width='60%'><%= meth[:short_description] %></td>
+  </tr>
+<% end %>

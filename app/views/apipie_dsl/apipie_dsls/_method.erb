@@ -1,0 +1,34 @@
+<div class='accordion' id='meth-accordion'>
+  <% if meth[:show] %>
+  <tr>
+    <td>
+      <div class='pull-right small'>
+        <a href='<%= meth[:doc_url] %><%= link_extension %>'> >>> </a>
+      </div>
+      <div>
+        <h2>
+          <a href='#description-<%= escaped_method_name(meth[:name], '_') %>'
+           class='accordion-toggle'
+           data-toggle='collapse'
+           data-parent='#meth-accordion'>
+            <%= method_signature(meth) %>
+          </a>
+          <% if meth[:deprecated] %>
+            <code>DEPRECATED</code>
+          <% end %>
+          <br>
+          <small><%= raw meth[:short_description] %></small>
+        </h2>
+      </div>
+
+      <% unless meth[:see].empty? %>
+        Also see <%= meth[:see].map { |s| link_to(s[:description], "#{s[:link]}#{link_extension}") }.to_sentence.html_safe %>.
+      <% end %>
+
+      <div id='description-<%= escaped_method_name(meth[:name], '_') %>' class='collapse accordion-body'>
+        <%= render partial: 'method_detail', locals: { method: meth, h_level: 3 } %>
+      </div>
+    </td>
+  </tr>
+  <% end %>
+</div>

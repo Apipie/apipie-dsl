@@ -4,8 +4,11 @@ require_relative '../../tasks_utils'
 
 namespace :apipie_dsl do
   desc 'Generate cache to avoid production dependencies on markup languages'
-  task :cache => :environment do
-    puts "#{Time.now} | Started"
+  task :cache, [:include_json] => :environment do |_task, args|
+    args.with_defaults(include_json: false)
+    include_json = %w[1 true].include?(args[:include_json])
+    time_start = Time.now
+    puts "#{time_start} | Started"
     ApipieDSL::TasksUtils.with_loaded_documentation do
       puts "#{Time.now} | Documents loaded..."
       ([nil] + ApipieDSL.configuration.languages).each do |lang|
@@ -20,12 +23,12 @@ namespace :apipie_dsl do
             ApipieDSL.url_prefix = "../../#{subdir}"
             doc = ApipieDSL.docs(version, nil, nil, lang, section)
             doc[:docs][:link_extension] = "#{lang_ext(lang)}.html"
-            ApipieDSL::TasksUtils.generate_index_page(file_base_version, doc, true, true, lang, section)
+            ApipieDSL::TasksUtils.generate_index_page(file_base_version, doc, include_json, true, lang, section)
             ApipieDSL.url_prefix = "../../../#{subdir}"
             section_out = "#{file_base_version}/#{section}"
-            ApipieDSL::TasksUtils.generate_class_pages(version, section_out, doc, true, lang, section)
+            ApipieDSL::TasksUtils.generate_class_pages(version, section_out, doc, include_json, lang, section)
             ApipieDSL.url_prefix = "../../../../#{subdir}"
-            ApipieDSL::TasksUtils.generate_method_pages(version, section_out, doc, true, lang, section)
+            ApipieDSL::TasksUtils.generate_method_pages(version, section_out, doc, include_json, lang, section)
           end
           ApipieDSL.url_prefix = "../../#{subdir}"
           doc = ApipieDSL.docs(version, nil, nil, lang)
@@ -34,6 +37,7 @@ namespace :apipie_dsl do
         end
       end
     end
-    puts "#{Time.now} | Finished"
+    time_end = Time.now
+    puts "#{time_end} | Finished in #{time_end - time_start}"
   end
 end
