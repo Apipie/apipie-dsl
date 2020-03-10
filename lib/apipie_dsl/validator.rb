@@ -419,6 +419,27 @@ module ApipieDSL
       end
     end
 
+    class RestValidator < BaseValidator
+      def self.build(param_description, argument, _options, _block)
+        return unless %i[rest list splat].include?(argument)
+
+        new(param_description)
+      end
+
+      def validate(_value)
+        # In *rest param we don't care about passed values.
+        true
+      end
+
+      def description
+        'Must be a list of values'
+      end
+
+      def expected_type
+        'list'
+      end
+    end
+
     class NestedValidator < BaseValidator
       def initialize(param_description, argument, param_group)
         super(param_description)

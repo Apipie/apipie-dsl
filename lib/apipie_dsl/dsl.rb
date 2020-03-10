@@ -108,7 +108,6 @@ module ApipieDSL
 
     def optional(name, validator, desc_or_options = nil, options = {}, &block)
       options[:type] = :optional
-      options[:default] = nil
       param(name, validator, desc_or_options, options, &block)
     end
 
@@ -122,6 +121,14 @@ module ApipieDSL
       name = options[:name] || :block
       param(name, Proc, desc_or_options, options)
     end
+
+    def list(name, desc_or_options = nil, options = {})
+      options[:type] = :optional
+      options[:default] ||= 'empty list'
+      param(name, :rest, desc_or_options, options)
+    end
+    alias_method :splat, :list
+    alias_method :rest, :list
 
     def define_param_group(name, &block)
       ApipieDSL.define_param_group(class_scope, name, &block)

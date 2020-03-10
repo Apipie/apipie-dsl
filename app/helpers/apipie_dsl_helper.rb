@@ -35,7 +35,11 @@ module ApipieDslHelper
       when 'required'
         param[:name].to_s
       when 'optional'
-        "#{param[:name]} = #{default}"
+        if param[:expected_type] == 'list'
+          "*#{param[:name]}"
+        else
+          "#{param[:name]} = #{default}"
+        end
       when 'keyword'
         "#{param[:name]}: #{default}"
       end
