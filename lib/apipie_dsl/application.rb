@@ -53,6 +53,18 @@ module ApipieDSL
       @param_groups[key]
     end
 
+    def define_prop_group(klass, name, &block)
+      key = "#{klass.name}##{name}"
+      @prop_groups[key] = block
+    end
+
+    def get_prop_group(klass, name)
+      key = "#{klass.name}##{name}"
+      raise StandardError, "Prop group #{key} is not defined" unless @prop_groups.key?(key)
+
+      @prop_groups[key]
+    end
+
     def define_method_description(klass, method_name, dsl_data)
       return if ignored?(klass, method_name)
 
@@ -261,6 +273,7 @@ module ApipieDSL
       @class_versions ||= Hash.new { |h, klass| h[klass.to_s] = [] }
       @refs ||= Hash.new { |h, version| h[version] = {} }
       @param_groups ||= {}
+      @prop_groups ||= {}
     end
 
     def empty_docs(version, lang)

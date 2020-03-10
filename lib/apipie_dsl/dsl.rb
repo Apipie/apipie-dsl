@@ -290,6 +290,39 @@ module ApipieDSL
       }
       dsl_data[:properties] << [name, prop_dsl_data]
     end
+    alias_method :prop, :property
+
+    def define_prop_group(name, &block)
+      ApipieDSL.define_prop_group(class_scope, name, &block)
+    end
+
+    # Reuses param group for this method. The definition is looked up
+    # in scope of this class. If the group was defined in
+    # different class, the second param can be used to specify it.
+    def prop_group(name, scope_or_options = nil, options = {})
+      if scope_or_options.is_a?(Hash)
+        options.merge!(scope_or_options)
+        scope = options[:scope]
+      else
+        scope = scope_or_options
+      end
+      scope ||= default_prop_group_scope
+
+      @current_prop_group = {
+        scope: scope,
+        name: name,
+        options: options
+      }
+      instance_exec(&ApipieDSL.get_prop_group(scope, name))
+    ensure
+      @current_prop_group = nil
+    end
+
+    # Where the group definition should be looked up when no scope
+    # given. This is expected to return a class.
+    def default_prop_group_scope
+      class_scope
+    end
   end
 
   module Delegatable
@@ -319,6 +352,8 @@ module ApipieDSL
           class_description(&@dsl_block)
         when :param_group
           define_param_group(@options[:name], &@dsl_block)
+        when :prop_group
+          define_prop_group(@options[:name], &@dsl_block)
         end
       end
 
