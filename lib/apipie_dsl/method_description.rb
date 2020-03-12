@@ -47,7 +47,11 @@ module ApipieDSL
 
       @show = dsl_data[:show].nil? ? true : dsl_data[:show]
 
-      @examples = dsl_data[:examples]
+      @examples = (dsl_data[:examples] || []).select do |example|
+        next example if example[:for].nil?
+
+        example[:for].to_s == @name
+      end
 
       @aliases = dsl_data[:aliases]
     end

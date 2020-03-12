@@ -231,7 +231,16 @@ module ApipieDSL
       elsif !desc_or_options.nil?
         options[:desc] = desc_or_options
       end
-      dsl_data[:examples] << { example: example, desc: options[:desc] }
+      dsl_data[:examples] << { example: example, desc: options[:desc], for: options[:for] }
+    end
+
+    def example_for(method_name, example, desc_or_options = nil, options = {})
+      if desc_or_options.is_a?(Hash)
+        options.merge!(desc_or_options)
+      elsif !desc_or_options.nil?
+        options[:desc] = desc_or_options
+      end
+      dsl_data[:examples] << { example: example, desc: options[:desc], for: method_name }
     end
   end
 
