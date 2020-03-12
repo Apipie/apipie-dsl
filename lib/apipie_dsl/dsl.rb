@@ -313,9 +313,11 @@ module ApipieDSL
         name: name,
         options: options
       }
+      @meta = (options[:meta] || {}).tap { |meta| meta[:class_scope] = class_scope }
       instance_exec(&ApipieDSL.get_prop_group(scope, name))
     ensure
       @current_prop_group = nil
+      @meta = nil
     end
 
     # Where the group definition should be looked up when no scope
