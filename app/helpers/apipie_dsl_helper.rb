@@ -54,6 +54,11 @@ module ApipieDslHelper
   end
 
   def class_references(obj, version, link_extension)
+    # Try to convert to a constant in case of LazyValidator usage
+    # Will raise const missing exception in case of wrong usage of the method
+    if obj.is_a?(String)
+      obj = defined?(Rails) ? obj.constantize : obj.split('::').reduce(::Module, :const_get)
+    end
     return obj.to_s unless [::Module, ::Class, ::Array].include?(obj.class)
 
     refs = [obj].flatten.map do |o|
