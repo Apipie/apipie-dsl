@@ -484,8 +484,13 @@ module ApipieDSL
       end
 
       instance = Delegatee.instance
-      dsl_data = instance.eval_dsl_for(:method)
       class_scope = instance.class_scope
+      # Mainly for Rails in case of constant loading within apipie block.
+      # Prevents methods, that are being defined in other class than the class
+      # where apipie block was called, to be documented with current apipie block
+      return unless class_scope == self
+
+      dsl_data = instance.eval_dsl_for(:method)
 
       ApipieDSL.remove_method_description(class_scope, dsl_data[:dsl_versions], method_name)
       method_desc = ApipieDSL.define_method_description(class_scope, method_name, dsl_data)
@@ -493,7 +498,8 @@ module ApipieDSL
       Delegatee.instance_reset
       Delegatee.define_validators(class_scope, method_desc)
     ensure
-      Delegatee.instance_reset
+      # Reset if we finished method describing in the right class
+      Delegatee.instance_reset if class_scope == self
     end
 
     private
