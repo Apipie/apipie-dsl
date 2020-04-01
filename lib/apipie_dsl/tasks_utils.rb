@@ -17,6 +17,7 @@ module ApipieDSL
 
       base_paths = [File.expand_path('../../app/views/apipie_dsl/apipie_dsls', __dir__)]
       if ApipieDSL.configuration.rails?
+        base_paths.unshift("#{Rails.root}/app/views") if File.directory?("#{Rails.root}/app/views")
         base_paths.unshift("#{Rails.root}/app/views/apipie_dsl/apipie_dsls") if File.directory?("#{Rails.root}/app/views/apipie_dsl/apipie_dsls")
       end
       layouts_paths = [File.expand_path('../../app/views/layouts', __dir__)]
