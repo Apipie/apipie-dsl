@@ -15,27 +15,18 @@ module ApipieDSL
     def self.renderer
       return @renderer if @renderer
 
-      @renderer = if defined?(Rails)
-                    rails_renderer
-                  else
-                    simple_renderer
-                  end
-    end
-
-    def self.simple_renderer
-      raise NotImplementedError
-    end
-
-    def self.rails_renderer
       base_paths = [File.expand_path('../../app/views/apipie_dsl/apipie_dsls', __dir__)]
-      base_paths.unshift("#{Rails.root}/app/views/apipie_dsl/apipie_dsls") if File.directory?("#{Rails.root}/app/views/apipie_dsl/apipie_dsls")
-
+      if ApipieDSL.configuration.rails?
+        base_paths.unshift("#{Rails.root}/app/views/apipie_dsl/apipie_dsls") if File.directory?("#{Rails.root}/app/views/apipie_dsl/apipie_dsls")
+      end
       layouts_paths = [File.expand_path('../../app/views/layouts', __dir__)]
-      layouts_paths.unshift("#{Rails.root}/app/views/layouts") if File.directory?("#{Rails.root}/app/views/layouts/apipie_dsl")
+      if ApipieDSL.configuration.rails?
+        layouts_paths.unshift("#{Rails.root}/app/views/layouts") if File.directory?("#{Rails.root}/app/views/layouts/apipie_dsl")
+      end
       paths = ActionView::PathSet.new(base_paths + layouts_paths)
-      r_renderer = ActionView::Base.new(ActionController::Base.append_view_path(paths), {})
-      r_renderer.singleton_class.send(:include, ::ApipieDslHelper)
-      r_renderer
+      @renderer = ActionView::Base.new(paths, {})
+      @renderer.singleton_class.send(:include, ::ApipieDslHelper)
+      @renderer
     end
 
     def self.render_page(file_name, template, variables, layout = 'apipie_dsl')

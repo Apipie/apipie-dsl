@@ -231,12 +231,12 @@ module ApipieDSL
       old_locale = locale
       reset_locale(ApipieDSL.configuration.default_locale)
 
-      rails_mark_classes_for_reload if defined?(Rails)
+      rails_mark_classes_for_reload if ApipieDSL.configuration.rails?
 
       dsl_classes_paths.each do |file|
         begin
           ApipieDSL.debug("Loading #{file}")
-          if defined?(Rails)
+          if ApipieDSL.configuration.rails?
             load_class_from_file(file)
           else
             load(file)

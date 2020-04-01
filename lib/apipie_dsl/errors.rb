@@ -65,4 +65,16 @@ module ApipieDSL
       "A 'returns' statement cannot be used more than once"
     end
   end
+
+  class ConfigurationError < Error
+    attr_reader :value
+
+    def initialize(value)
+      @value = value
+    end
+
+    def to_s
+      "Configuration error: #{@value}"
+    end
+  end
 end

@@ -3,6 +3,7 @@
 require 'apipie_dsl/tasks_utils'
 
 module ApipieDslHelper
+  require 'action_view' unless defined?(ActionView)
   include ActionView::Helpers::TagHelper
 
   def heading(title, level = 1)
@@ -57,7 +58,7 @@ module ApipieDslHelper
     # Try to convert to a constant in case of LazyValidator usage
     # Will raise const missing exception in case of wrong usage of the method
     if obj.is_a?(String)
-      obj = defined?(Rails) ? obj.constantize : obj.split('::').reduce(::Module, :const_get)
+      obj = ApipieDSL.configuration.rails? ? obj.constantize : obj.split('::').reduce(::Module, :const_get)
     end
     return obj.to_s unless [::Module, ::Class, ::Array].include?(obj.class)
 

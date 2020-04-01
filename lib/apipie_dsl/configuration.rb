@@ -7,7 +7,7 @@ module ApipieDSL
                   :doc_path, :languages, :link_extension, :translate, :locale,
                   :default_locale, :class_full_names, :autoload_methods,
                   :dsl_classes_matcher, :sections, :authenticate, :authorize,
-                  :use_cache, :app_info, :help_layout
+                  :use_cache, :app_info, :help_layout, :rails
     attr_writer   :validate_value, :ignored, :reload_dsl, :default_section,
                   :dsl_classes_matchers, :cache_dir
 
@@ -15,9 +15,13 @@ module ApipieDSL
     alias_method :class_full_names?, :class_full_names
     alias_method :autoload_methods?, :autoload_methods
     alias_method :use_cache?, :use_cache
+    alias_method :rails?, :rails
 
     def cache_dir
-      @cache_dir ||= File.join(Rails.root, 'public', 'apipie-dsl-cache')
+      return @cache_dir if @cache_dir
+      raise ConfigurationError.new('Please specify cache_dir to be able to use caching.') unless rails?
+
+      @cache_dir = File.join(Rails.root, 'public', 'apipie-dsl-cache')
     end
 
     def validate_value
@@ -46,11 +50,11 @@ module ApipieDSL
     end
 
     def reload_dsl?
-      @reload_dsl = if defined? Rails
-                          Rails.env.development?
-                        else
-                          @reload_dsl
-                        end
+      @reload_dsl = if rails?
+                      Rails.env.development?
+                    else
+                      @reload_dsl
+                    end
       @reload_dsl && !dsl_classes_matchers.empty?
     end
 
@@ -63,7 +67,7 @@ module ApipieDSL
       @app_name = 'Another DOC'
       @app_info = {}
       @copyright = nil
-      @validate = :implicitly
+      @validate = false
       @validate_value = true
       @doc_base_url = '/apipie-dsl'
       @layout = 'apipie_dsl/apipie_dsl'
@@ -82,6 +86,7 @@ module ApipieDSL
       @dsl_classes_matchers = []
       @sections = ['all']
       @default_section = nil
+      @rails = true
     end
   end
 end

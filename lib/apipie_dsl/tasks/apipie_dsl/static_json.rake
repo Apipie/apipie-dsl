@@ -4,7 +4,7 @@ require_relative '../../tasks_utils'
 
 namespace :apipie_dsl do
   desc 'Generate static documentation json'
-  if defined?(Rails)
+  if ApipieDSL.configuration.rails?
     task static_json: :environment do |_task, args|
       ApipieDSL::TasksUtils.with_loaded_documentation do
         args.with_defaults(version: ApipieDSL.configuration.default_version)

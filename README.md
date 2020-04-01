@@ -4,7 +4,7 @@ Apipie-dsl is a DSL for documenting DSLs written in Ruby. Instead of traditional
 use of `#comments`, ApipieDSL lets you describe the code, through the code.
 
 ## Getting started
-
+#### Within Rails application
 The easiest way to get ApipieDSL up and running with your app is:
 
 ```sh
@@ -23,6 +23,36 @@ Now you can start documenting your DSLs (see
   def print(string)
    # ...
   end
+```
+
+#### Within plain Ruby application
+```sh
+  echo "gem 'apipie-dsl'" >> Gemfile
+  # To be able to generate HTML documentation via rake command
+  echo "gem 'rake'" >> Gemfile
+  echo "gem 'actionview'" >> Gemfile
+  bundle install
+```
+In case if you want to generate HTML documentation via rake command, I'd suggest
+have the following in your `Rakefile`:
+```ruby
+require 'apipie-dsl'
+
+# Configuration is required!
+ApipieDSL.configure do |config|
+  config.app_name = 'My DSL Docs'
+  # Matchers are needed to load your code with documentation
+  config.dsl_classes_matchers = [
+    "#{File.dirname(__dir__)}/dsl_example/common_classes.rb",
+    "#{File.dirname(__dir__)}/dsl_example/dsl.rb"
+  ]
+  # This is important for plain ruby application!
+  config.rails = false
+  # ... other configurations
+end
+spec = Gem::Specification.find_by_name('apipie-dsl')
+rakefile = "#{spec.gem_dir}/lib/apipie_dsl/Rakefile"
+load(rakefile)
 ```
 
 # Documentation

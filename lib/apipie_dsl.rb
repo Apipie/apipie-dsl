@@ -18,7 +18,7 @@ require 'apipie_dsl/validator'
 module ApipieDSL
   require 'fileutils'
   if defined?(Rails)
-    require 'apipie_dsl/railtie' 
+    require 'apipie_dsl/railtie'
     require 'apipie_dsl/routing'
   end
 
