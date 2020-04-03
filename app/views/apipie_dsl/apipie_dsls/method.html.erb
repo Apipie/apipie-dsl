@@ -29,8 +29,10 @@
 </ul>
 
 <div class='page-header'>
+  <% (@method[:signature] || [method_signature(@method)]).each do |signature| %>
+    <h1> <%= signature %> </h1>
+  <% end %>
   <h1>
-    <%= method_signature(@method) %>
     <% if @method[:deprecated] %>
       <code>DEPRECATED</code>
     <% end %>

@@ -44,7 +44,7 @@ module ApipieDslHelper
       when 'keyword'
         "#{param[:name]}: #{default}"
       end
-    end.join(', ')
+    end.compact.join(', ')
 
     block_param = method_desc[:params].find { |p| p[:type] == 'block' }
 

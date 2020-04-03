@@ -175,6 +175,10 @@ module ApipieDSL
       dsl_data[:aliases] = names
     end
 
+    def signature(*signature)
+      dsl_data[:signature] = signature
+    end
+
     # Describe possible errors
     #
     # Example:
