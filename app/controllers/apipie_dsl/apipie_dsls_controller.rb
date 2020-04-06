@@ -76,9 +76,6 @@ module ApipieDsl
       end
     end
 
-    def apipie_dsl_checksum
-    end
-
     private
 
     helper_method :heading
