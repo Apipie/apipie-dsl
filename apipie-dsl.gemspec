@@ -15,7 +15,7 @@ Gem::Specification.new do |spec|
   spec.homepage      = 'https://github.com/ofedoren/apipie-dsl'
   spec.license       = 'MIT'
 
-  spec.files         = Dir['{app,lib,doc,test}/**/*', 'LICENSE', 'README*']
+  spec.files         = Dir['{app,lib,doc,test}/**/*', '*-LICENSE*', 'README*']
   spec.test_files    = Dir['{test}/**/*']
 
   spec.bindir        = 'bin'
