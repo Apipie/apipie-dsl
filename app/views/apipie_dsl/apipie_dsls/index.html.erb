@@ -15,7 +15,7 @@
 </ul>
 <ul class='breadcrumb'>
   <li class='active'><a href='<%= @doc[:doc_url] %><%= section_ext(@section) %><%= @doc[:link_extension] %>'><%= @doc[:name] %> <%= current_version(@doc[:classes]) %></a></li>
-  <%= render(:partial => 'languages', :locals => {:doc_url => @doc[:doc_url]}) %>
+  <%= render(partial: 'languages', locals: { doc_url: @doc[:doc_url] + section_ext(@section) }) %>
   <% if @versions && @versions.size > 1 %>
   <li class='pull-right'>
     <%= @versions.collect { |v| link_to v, ApipieDSL.full_url(v+@doc[:link_extension]) }.join(' / ').html_safe %>

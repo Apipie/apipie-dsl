@@ -21,7 +21,7 @@
   <li class='active'>
     <%= @klass[:name] %>
   </li>
-  <%= render(:partial => 'languages', :locals => {:doc_url => @klass[:doc_url]}) %>
+  <%= render(partial: 'languages', locals: { doc_url: @klass[:doc_url] }) %>
 </ul>
 
 <div class='page-header'>
