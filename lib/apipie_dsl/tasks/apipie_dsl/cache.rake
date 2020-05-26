@@ -23,7 +23,7 @@ namespace :apipie_dsl do
             ApipieDSL.configuration.sections.each do |section|
               ApipieDSL.url_prefix = "../../#{subdir}"
               doc = ApipieDSL.docs(version, nil, nil, lang, section)
-              doc[:docs][:link_extension] = "#{lang_ext(lang)}.html"
+              doc[:docs][:link_extension] = "#{ApipieDSL::TasksUtils.lang_ext(lang)}.html"
               ApipieDSL::TasksUtils.generate_index_page(file_base_version, doc, include_json, true, lang, section)
               ApipieDSL.url_prefix = "../../../#{subdir}"
               section_out = "#{file_base_version}/#{section}"
@@ -33,7 +33,7 @@ namespace :apipie_dsl do
             end
             ApipieDSL.url_prefix = "../../#{subdir}"
             doc = ApipieDSL.docs(version, nil, nil, lang)
-            doc[:docs][:link_extension] = "#{lang_ext(lang)}.html"
+            doc[:docs][:link_extension] = "#{ApipieDSL::TasksUtils.lang_ext(lang)}.html"
             ApipieDSL::TasksUtils.generate_help_page(file_base_version, doc, true, lang)
           end
         end
@@ -60,7 +60,7 @@ namespace :apipie_dsl do
             ApipieDSL.configuration.sections.each do |section|
               ApipieDSL.url_prefix = "../../#{subdir}"
               doc = ApipieDSL.docs(version, nil, nil, lang, section)
-              doc[:docs][:link_extension] = "#{lang_ext(lang)}.html"
+              doc[:docs][:link_extension] = "#{ApipieDSL::TasksUtils.lang_ext(lang)}.html"
               ApipieDSL::TasksUtils.generate_index_page(file_base_version, doc, include_json, true, lang, section)
               ApipieDSL.url_prefix = "../../../#{subdir}"
               section_out = "#{file_base_version}/#{section}"
@@ -70,7 +70,7 @@ namespace :apipie_dsl do
             end
             ApipieDSL.url_prefix = "../../#{subdir}"
             doc = ApipieDSL.docs(version, nil, nil, lang)
-            doc[:docs][:link_extension] = "#{lang_ext(lang)}.html"
+            doc[:docs][:link_extension] = "#{ApipieDSL::TasksUtils.lang_ext(lang)}.html"
             ApipieDSL::TasksUtils.generate_help_page(file_base_version, doc, true, lang)
           end
         end
