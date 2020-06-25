@@ -16,6 +16,29 @@ module ApipieDslHelper
     return method.gsub('?', escaping) if method.is_a?(String)
   end
 
+  def apipie_dsl_example(source, output = nil)
+    text = content_tag(:p, _('Example input:')) +
+      content_tag(:pre, source)
+
+    if output.present?
+      text += content_tag(:p, _('Example output:')) +
+        content_tag(:pre, output)
+    end
+
+    text.html_safe
+  end
+
+  def apipie_erb_wrap(content, mode: :loud, open_trim: false, close_trim: false)
+    case mode
+    when :loud
+      '<%= ' + content + " #{close_trim ? '-' : ''}%>"
+    when :comment
+      '<%# ' + content + " #{close_trim ? '-' : ''}%>"
+    else
+      "<%#{open_trim ? '- ' : ' '}" + content + " #{close_trim ? '-' : ''}%>"
+    end
+  end
+
   def resolve_default(default)
     case default
     when nil
