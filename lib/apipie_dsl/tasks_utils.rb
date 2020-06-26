@@ -73,7 +73,7 @@ module ApipieDSL
         class_file_base = File.join(file_base, class_desc[:id])
         FileUtils.mkdir_p(File.dirname(class_file_base)) unless File.exist?(File.dirname(class_file_base))
 
-        doc = ApipieDSL.docs(version, class_name, nil, lang)
+        doc = ApipieDSL.docs(version, class_name, nil, lang, section)
         doc[:docs][:link_extension] = (lang ? ".#{lang}.html" : '.html')
         render_page("#{class_file_base}#{lang_ext(lang)}.html", 'class',
                     doc: doc[:docs], klass: doc[:docs][:classes].first,
@@ -90,7 +90,7 @@ module ApipieDSL
           method_file_base = File.join(file_base, class_name.to_s, method[:name].to_s)
           FileUtils.mkdir_p(File.dirname(method_file_base)) unless File.exist?(File.dirname(method_file_base))
 
-          doc = ApipieDSL.docs(version, class_name, method[:name], lang)
+          doc = ApipieDSL.docs(version, class_name, method[:name], lang, section)
           doc[:docs][:link_extension] = (lang ? ".#{lang}.html" : '.html')
           render_page("#{method_file_base}#{lang_ext(lang)}.html", 'method',
                       doc: doc[:docs], klass: doc[:docs][:classes].first,
