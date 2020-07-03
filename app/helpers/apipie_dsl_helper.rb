@@ -81,6 +81,9 @@ module ApipieDslHelper
     # Try to convert to a constant in case of LazyValidator usage
     # Will raise const missing exception in case of wrong usage of the method
     if obj.is_a?(String)
+      ref = ApipieDSL.refs[version][ApipieDSL.get_class_name(obj)]
+      return "<a href='#{ref.doc_url(ref.sections.first)}#{link_extension}'>#{obj}</a>" if ref
+
       obj = ApipieDSL.configuration.rails? ? obj.constantize : obj.split('::').reduce(::Module, :const_get)
     end
     return obj.to_s unless [::Module, ::Class, ::Array].include?(obj.class)
