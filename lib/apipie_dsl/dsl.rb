@@ -347,7 +347,7 @@ module ApipieDSL
       include ApipieDSL::Klass
       include ApipieDSL::Method
 
-      attr_reader :class_scope
+      attr_accessor :class_scope
 
       def initialize(class_scope)
         @class_scope = class_scope
@@ -385,7 +385,7 @@ module ApipieDSL
       end
 
       def self.extension_data
-        @extension_data ||= []
+        @extension_data ||= { methods: [] }
       end
 
       # rubocop:disable Metrics/AbcSize
@@ -553,16 +553,19 @@ module ApipieDSL
 
       delegatee = Delegatee.instance_for(self).with(&block)
       delegatee.dsl_data[:update_only] = true
-      # Don't eval the block, since it will be evaluated after method is defined
+
       return if context == :method
 
-      # Currently method extensions are supported only
+      # Save instance to reuse when actual scope is set
+      Delegatee.extension_data[:class] = delegatee
       Delegatee.instance_reset
     end
 
     def prepended(klass)
       super
-      Delegatee.extension_data.each do |method_name, dsl_data|
+      Delegatee.extension_data[:class]&.class_scope = klass
+      Delegatee.extension_data[:class]&.eval_dsl_for(:class)
+      Delegatee.extension_data[:methods].each do |method_name, dsl_data|
         class_scope = klass
         if dsl_data[:update_only]
           class_name = ApipieDSL.get_class_name(class_scope)
@@ -592,7 +595,7 @@ module ApipieDSL
       return if Delegatee.instance.nil?
 
       dsl_data = Delegatee.instance.eval_dsl_for(:method)
-      Delegatee.extension_data << [method_name, dsl_data]
+      Delegatee.extension_data[:methods] << [method_name, dsl_data]
     ensure
       Delegatee.instance_reset
     end

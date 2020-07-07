@@ -12,7 +12,7 @@ module ApipieDSL
       @properties = []
       @version = version || ApipieDSL.configuration.default_version
       @parent = ApipieDSL.get_class_description(ApipieDSL.superclass_for(klass), version)
-      @refs = []
+      @refs = [@name]
       @sections = []
       @show = true
       update_from_dsl_data(dsl_data) if dsl_data
@@ -20,17 +20,22 @@ module ApipieDSL
 
     def update_from_dsl_data(dsl_data)
       @name = dsl_data[:class_name] if dsl_data[:class_name]
-      @full_description = ApipieDSL.markup_to_html(dsl_data[:description])
-      @short_description = dsl_data[:short_description]
+      @full_description = ApipieDSL.markup_to_html(dsl_data[:description]) if dsl_data[:description]
+      @short_description = dsl_data[:short_description] || @short_description
       @tag_list = dsl_data[:tag_list]
-      @metadata = dsl_data[:meta]
+      if dsl_data[:meta]&.is_a?(Hash)
+        @metadata&.merge!(dsl_data[:meta])
+      elsif dsl_data[:meta]
+        @metadata = dsl_data[:meta]
+      end
       @deprecated = dsl_data[:deprecated] || false
       @show = dsl_data[:show] || @show
-      @properties = (dsl_data[:properties] || []).map do |args|
-        ApipieDSL::MethodDescription.from_dsl_data(self, args)
+      prop_names = @properties.map(&:name)
+      (dsl_data[:properties] || []).each do |args|
+        @properties << ApipieDSL::MethodDescription.from_dsl_data(self, args) unless prop_names.include?(args.first.to_s)
       end
-      @refs = dsl_data[:refs] || [@name]
-      @sections = dsl_data[:sections] || @sections
+      @refs = (@refs + dsl_data[:refs]).uniq if dsl_data[:refs]
+      @sections = (@sections + dsl_data[:sections]).uniq if dsl_data[:sections]
       return unless dsl_data[:app_info]
 
       ApipieDSL.configuration.app_info[version] = dsl_data[:app_info]
@@ -63,10 +68,6 @@ module ApipieDSL
 
     def method_descriptions
       @methods.values
-    end
-
-    def property_descriptions
-      @properties
     end
 
     def doc_url(section = nil)
