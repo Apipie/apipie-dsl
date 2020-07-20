@@ -1,18 +1,4 @@
-<ul class='breadcrumb'>
-  <% dsl_sections.each do |section| %>
-    <% if section == @section %>
-      <li class='active'><a href='<%= @doc[:doc_url] %><%= section_ext(section) %><%= @doc[:link_extension] %>'><%= t("apipie_dsl.#{@section}") %></a></li>
-    <% else %>
-      <li><a href='<%= @doc[:doc_url] %><%= section_ext(section) %><%= @doc[:link_extension] %>'><%= t("apipie_dsl.#{section}") %></a></li>
-    <% end %>
-  <% end %>
-  <% unless ApipieDSL.configuration.help_layout.nil? %>
-    <li class='pull-right'>
-      <% section = 'help' %>
-      <a href='<%= @doc[:doc_url] %><%= section_ext(section) %><%= @doc[:link_extension] %>'><%= t("apipie_dsl.#{section}") %></a>
-    </li>
-  <% end %>
-</ul>
+<%= apipie_dsl_menu %>
 <ul class='breadcrumb'>
   <li>
     <a href='<%= @doc[:doc_url] %><%= section_ext(@section) %><%= @doc[:link_extension] %>'><%= @doc[:name] %> <%= @klass[:version] %></a>
