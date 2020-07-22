@@ -4,7 +4,7 @@
       <td>
         <div>
           <h2>
-            <a id='link-description-<%= escaped_method_name(prop[:name], '_') %>' href='#description-<%= escaped_method_name(prop[:name], '_') %>'
+            <a id='link-description-<%= escaped_method_name(prop[:name], escaping: '_', pattern: /[?!]/) %>' href='#description-<%= escaped_method_name(prop[:name], escaping: '_', pattern: /[?!]/) %>'
              class='accordion-toggle'
              data-toggle='collapse'
              data-parent='#prop-accordion'>
@@ -15,7 +15,7 @@
           </h2>
         </div>
 
-        <div id='description-<%= escaped_method_name(prop[:name], '_') %>' class='collapse accordion-body'>
+        <div id='description-<%= escaped_method_name(prop[:name], escaping: '_', pattern: /[?!]/) %>' class='collapse accordion-body'>
           <%= render partial: 'property_detail', locals: { property: prop, h_level: 3 } %>
         </div>
       </td>

@@ -12,8 +12,10 @@ module ApipieDslHelper
     end
   end
 
-  def escaped_method_name(method, escaping = '')
-    return method.gsub('?', escaping) if method.is_a?(String)
+  def escaped_method_name(method, options = {})
+    options[:escaping] ||= ''
+    options[:pattern] ||= /[?]/
+    return method.gsub(options[:pattern], options[:escaping]) if method.is_a?(String)
   end
 
   def apipie_dsl_example(source, output = nil)

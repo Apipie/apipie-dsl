@@ -1,7 +1,7 @@
 <% if prop[:show] %>
   <tr>
     <td>
-      <a href='<%= doc_url %><%= link_extension %>#link-description-<%= escaped_method_name(prop[:name], '_') %>'>
+      <a href='<%= doc_url %><%= link_extension %>#link-description-<%= escaped_method_name(prop[:name], escaping: '_') %>'>
         <%= prop[:name] %>
       </a>
       <% if prop[:deprecated] %>
