@@ -45,6 +45,8 @@ module ApipieDslHelper
       'nil'
     when ''
       "\"\""
+    when Symbol
+      ":#{default}"
     else
       default
     end
