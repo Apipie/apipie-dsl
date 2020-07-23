@@ -1,12 +1,4 @@
 <% if ApipieDSL.configuration.help_layout %>
-  <ul class='breadcrumb'>
-    <% dsl_sections.each do |section| %>
-      <li><a href='<%= @doc[:doc_url] %><%= section_ext(section) %><%= @doc[:link_extension] %>'><%= t("apipie_dsl.#{section}") %></a></li>
-    <% end %>
-      <li class='active pull-right'>
-        <% section = 'help' %>
-        <a href='<%= @doc[:doc_url] %><%= section_ext(section) %><%= @doc[:link_extension] %>'><%= t("apipie_dsl.#{section}") %></a>
-      </li>
-  </ul>
+  <%= apipie_dsl_menu %>
   <%= render_help %>
 <% end %>
