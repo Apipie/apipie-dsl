@@ -22,13 +22,13 @@ module ApipieDslHelper
     content_tag(:ul, class: 'breadcrumb') do
       content = dsl_sections.map do |section|
         content_tag(:li, class: section == @section ? 'active' : '') do
-          link_to(t("apipie_dsl.#{section}"), @doc[:doc_url] + section_ext(section) + @doc[:link_extension])
+          link_to(_(section.titleize), @doc[:doc_url] + section_ext(section) + @doc[:link_extension])
         end
       end.join(' | ').html_safe
 
       unless ApipieDSL.configuration.help_layout.nil?
         content += content_tag(:li, class: "pull-right #{'active' if @section == 'help'}") do
-          link_to(t("apipie_dsl.help"), @doc[:doc_url] + section_ext('help') + @doc[:link_extension])
+          link_to(_('Help'), @doc[:doc_url] + section_ext('help') + @doc[:link_extension])
         end
       end
     end
