@@ -3,6 +3,16 @@
   <%= render(partial: 'metadata', locals: { meta: property[:metadata] }) %>
 <% end %>
 
+<% unless property[:examples].blank? %>
+  <%= heading(t('apipie_dsl.examples'), h_level) %>
+  <% property[:examples].each do |example| %>
+    <% if example[:desc] %>
+      <p><%= example[:desc] %></p>
+    <% end %>
+    <pre class="prettyprint"><%= example[:example] %></pre>
+  <% end %>
+<% end %>
+
 <% unless property[:params].blank? %>
   <%= heading(t('apipie_dsl.params'), h_level) %>
   <table class='table'>

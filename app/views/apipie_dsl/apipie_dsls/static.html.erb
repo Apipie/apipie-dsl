@@ -59,7 +59,10 @@
         <% unless prop[:examples].blank? %>
           <h2><%= t('apipie_dsl.examples') %></h2>
           <% prop[:examples].each do |example| %>
-            <pre><%= example %></pre>
+            <% if example[:desc] %>
+              <p><%= example[:desc] %></p>
+            <% end %>
+            <pre><%= example[:example] %></pre>
           <% end %>
         <% end %>
 
@@ -107,7 +110,10 @@
         <% unless method[:examples].blank? %>
           <h2><%= t('apipie_dsl.examples') %></h2>
           <% method[:examples].each do |example| %>
-            <pre><%= example %></pre>
+            <% if example[:desc] %>
+              <p><%= example[:desc] %></p>
+            <% end %>
+            <pre class="prettyprint"><%= example[:example] %></pre>
           <% end %>
         <% end %>
 
