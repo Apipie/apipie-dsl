@@ -5,3 +5,14 @@ body {
 .sidebar-nav {
   padding: 9px 0;
 }
+
+pre:not(.prettyprint):not(.wiki) {
+  margin: 0 0 9px;
+  padding: 0;
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-size: 13px;
+  line-height: 18px;
+  color: #333333;
+  background-color: inherit;
+  border: none;
+}

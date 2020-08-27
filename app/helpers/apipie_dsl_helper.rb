@@ -36,11 +36,11 @@ module ApipieDslHelper
 
   def apipie_dsl_example(source, output = nil)
     text = content_tag(:p, _('Example input:')) +
-      content_tag(:pre, source)
+      content_tag(:pre, source, class: 'wiki')
 
     if output.present?
       text += content_tag(:p, _('Example output:')) +
-        content_tag(:pre, output)
+        content_tag(:pre, output, class: 'wiki')
     end
 
     text.html_safe
