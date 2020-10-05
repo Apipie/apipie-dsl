@@ -6,7 +6,7 @@ module ApipieDSL
       require 'apipie_dsl/static_dispatcher'
 
       class Engine < Rails::Engine
-        initializer 'static assets', :before => :build_middleware_stack do |app|
+        initializer 'static assets', before: :build_middleware_stack do |app|
           app.middleware.use ::ApipieDSL::StaticDispatcher, "#{root}/app/public"
         end
       end

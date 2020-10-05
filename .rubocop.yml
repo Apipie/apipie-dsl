@@ -1,7 +1,10 @@
 inherit_from: .rubocop_todo.yml
 
+require:
+  - rubocop-performance
+
 AllCops:
-  TargetRubyVersion: 2.3
+  TargetRubyVersion: 2.5
 
 Style/StringLiterals:
   Enabled: true
@@ -17,6 +20,9 @@ Style/FrozenStringLiteralComment:
 Metrics/ClassLength:
   Exclude:
     - 'test/**/*'
+
+Style/HashSyntax:
+  EnforcedStyle: ruby19
 
 Performance/Casecmp:
   Enabled: true
@@ -54,10 +60,10 @@ Layout/DotPosition:
 Style/ParenthesesAroundCondition:
   Enabled: true
 
-Layout/AlignHash:
+Layout/HashAlignment:
   Enabled: true
 
-Layout/AlignParameters:
+Layout/ParameterAlignment:
   Enabled: true
 
 Style/LineEndConcatenation:

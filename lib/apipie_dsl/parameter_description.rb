@@ -33,43 +33,41 @@ module ApipieDSL
       end
     end
 
-    # rubocop:disable Metrics/ParameterLists
     def initialize(method_description, name, validator, desc_or_options = nil, options = {}, &block)
-      if desc_or_options.is_a?(Hash)
-        options = options.merge(desc_or_options)
-      elsif desc_or_options.is_a?(String)
-        options[:desc] = desc_or_options
-      elsif !desc_or_options.nil?
-        raise ArgumentError, 'Parameter description: expected description or options as 3rd parameter'
-      end
+  if desc_or_options.is_a?(Hash)
+    options = options.merge(desc_or_options)
+  elsif desc_or_options.is_a?(String)
+    options[:desc] = desc_or_options
+  elsif !desc_or_options.nil?
+    raise ArgumentError, 'Parameter description: expected description or options as 3rd parameter'
+  end
 
-      @options = options.transform_keys(&:to_sym)
+  @options = options.transform_keys(&:to_sym)
 
-      @method_description = method_description
-      @name = name
-      @desc = @options[:desc]
-      @type = @options[:type] || :required
-      @schema = @options[:schema]
-      @default_value = @options[:default]
-      @parent = @options[:parent]
-      @metadata = @options[:meta]
-      @show = @options.key?(:show) ? @options[:show] : true
+  @method_description = method_description
+  @name = name
+  @desc = @options[:desc]
+  @type = @options[:type] || :required
+  @schema = @options[:schema]
+  @default_value = @options[:default]
+  @parent = @options[:parent]
+  @metadata = @options[:meta]
+  @show = @options.key?(:show) ? @options[:show] : true
 
-      return unless validator
+  return unless validator
 
-      @validator = if validator.is_a?(String)
-        ApipieDSL::Validator::Lazy.new(self, validator, @options, block)
-      else
-        ApipieDSL::Validator::BaseValidator.find(self, validator, @options, block)
-      end
-      raise StandardError, "Validator for #{validator} not found." unless @validator
+  @validator = if validator.is_a?(String)
+    ApipieDSL::Validator::Lazy.new(self, validator, @options, block)
+  else
+    ApipieDSL::Validator::BaseValidator.find(self, validator, @options, block)
+  end
+  raise StandardError, "Validator for #{validator} not found." unless @validator
     end
-    # rubocop:enable Metrics/ParameterLists
 
     def validator
-      return @validator unless @validator.is_a?(ApipieDSL::Validator::Lazy)
+  return @validator unless @validator.is_a?(ApipieDSL::Validator::Lazy)
 
-      @validator = @validator.build
+  @validator = @validator.build
     end
 
     def validate(value)

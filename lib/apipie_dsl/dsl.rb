@@ -388,7 +388,6 @@ module ApipieDSL
         @extension_data ||= { methods: [] }
       end
 
-      # rubocop:disable Metrics/AbcSize
       def self.define_validators(class_scope, method_desc)
         return if method_desc.nil? || ![true, :implicitly, :explicitly].include?(ApipieDSL.configuration.validate)
         return unless [true, :implicitly].include?(ApipieDSL.configuration.validate)
@@ -430,7 +429,6 @@ module ApipieDSL
         end
         ParameterDescription.merge(method_desc.plain_params, params)
       end
-      # rubocop:enable Metrics/AbcSize
     end
   end
 

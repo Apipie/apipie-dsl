@@ -8,6 +8,9 @@ namespace :apipie_dsl do
     task :cache, [:include_json] => :environment do |_task, args|
       args.with_defaults(include_json: false)
       include_json = %w[1 true].include?(args[:include_json])
+      cache_part = ENV['cache_part']
+      generate_index = (cache_part == 'classes' ? false : true)
+      generate_classes = (cache_part == 'index' ? false : true)
       time_start = Time.now
       puts "#{time_start} | Started"
       ApipieDSL::TasksUtils.with_loaded_documentation do
@@ -24,12 +27,16 @@ namespace :apipie_dsl do
               ApipieDSL.url_prefix = "../../#{subdir}"
               doc = ApipieDSL.docs(version, nil, nil, lang, section)
               doc[:docs][:link_extension] = "#{ApipieDSL::TasksUtils.lang_ext(lang)}.html"
-              ApipieDSL::TasksUtils.generate_index_page(file_base_version, doc, include_json, true, lang, section)
-              ApipieDSL.url_prefix = "../../../#{subdir}"
-              section_out = "#{file_base_version}/#{section}"
-              ApipieDSL::TasksUtils.generate_class_pages(version, section_out, doc, include_json, lang, section)
-              ApipieDSL.url_prefix = "../../../../#{subdir}"
-              ApipieDSL::TasksUtils.generate_method_pages(version, section_out, doc, include_json, lang, section)
+              if generate_index
+                ApipieDSL::TasksUtils.generate_index_page(file_base_version, doc, include_json, true, lang, section)
+              end
+              if generate_classes
+                ApipieDSL.url_prefix = "../../../#{subdir}"
+                section_out = "#{file_base_version}/#{section}"
+                ApipieDSL::TasksUtils.generate_class_pages(version, section_out, doc, include_json, lang, section)
+                ApipieDSL.url_prefix = "../../../../#{subdir}"
+                ApipieDSL::TasksUtils.generate_method_pages(version, section_out, doc, include_json, lang, section)
+              end
             end
             ApipieDSL.url_prefix = "../../#{subdir}"
             doc = ApipieDSL.docs(version, nil, nil, lang)
@@ -61,12 +68,16 @@ namespace :apipie_dsl do
               ApipieDSL.url_prefix = "../../#{subdir}"
               doc = ApipieDSL.docs(version, nil, nil, lang, section)
               doc[:docs][:link_extension] = "#{ApipieDSL::TasksUtils.lang_ext(lang)}.html"
-              ApipieDSL::TasksUtils.generate_index_page(file_base_version, doc, include_json, true, lang, section)
-              ApipieDSL.url_prefix = "../../../#{subdir}"
-              section_out = "#{file_base_version}/#{section}"
-              ApipieDSL::TasksUtils.generate_class_pages(version, section_out, doc, include_json, lang, section)
-              ApipieDSL.url_prefix = "../../../../#{subdir}"
-              ApipieDSL::TasksUtils.generate_method_pages(version, section_out, doc, include_json, lang, section)
+              if generate_index
+                ApipieDSL::TasksUtils.generate_index_page(file_base_version, doc, include_json, true, lang, section)
+              end
+              if generate_classes
+                ApipieDSL.url_prefix = "../../../#{subdir}"
+                section_out = "#{file_base_version}/#{section}"
+                ApipieDSL::TasksUtils.generate_class_pages(version, section_out, doc, include_json, lang, section)
+                ApipieDSL.url_prefix = "../../../../#{subdir}"
+                ApipieDSL::TasksUtils.generate_method_pages(version, section_out, doc, include_json, lang, section)
+              end
             end
             ApipieDSL.url_prefix = "../../#{subdir}"
             doc = ApipieDSL.docs(version, nil, nil, lang)
