@@ -2,10 +2,12 @@
 
 module ApipieDSL
   class Error < StandardError; end
+
   class ParamError < Error
     attr_accessor :param
 
     def initialize(param)
+      super
       @param = param
     end
   end
@@ -46,6 +48,7 @@ module ApipieDSL
     attr_accessor :value
 
     def initialize(value)
+      super
       @value = value
     end
 
@@ -70,6 +73,7 @@ module ApipieDSL
     attr_reader :value
 
     def initialize(value)
+      super
       @value = value
     end
 

@@ -12,8 +12,6 @@ module ApipieDSL
         @param_group = { scope: @scope }
         @options = options
         @return_type = (@options.keys & %i[array_of one_of object_of param_group]).first
-
-        return unless @options[@return_type].is_a?(::Class)
       end
 
       # this routine overrides Param#default_param_group_scope

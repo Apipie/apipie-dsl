@@ -49,11 +49,11 @@ module ApipieDslHelper
   def apipie_erb_wrap(content, mode: :loud, open_trim: false, close_trim: false)
     case mode
     when :loud
-      '<%= ' + content + " #{close_trim ? '-' : ''}%>"
+      "<%= #{content} #{close_trim ? '-' : ''}%>"
     when :comment
-      '<%# ' + content + " #{close_trim ? '-' : ''}%>"
+      "<%# #{content} #{close_trim ? '-' : ''}%>"
     else
-      "<%#{open_trim ? '- ' : ' '}" + content + " #{close_trim ? '-' : ''}%>"
+      "<%#{open_trim ? '-' : ''} #{content} #{close_trim ? '-' : ''}%>"
     end
   end
 
@@ -142,9 +142,10 @@ module ApipieDslHelper
   end
 
   def current_version(classes)
-    if classes.is_a?(Array)
+    case classes
+    when Array
       classes.first[:version]
-    elsif classes.is_a?(Hash)
+    when Hash
       classes.values.first[:version]
     else
       raise ApipieDSL::Error, "Cannot find current version for #{classes}"

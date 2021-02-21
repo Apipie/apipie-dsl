@@ -202,9 +202,10 @@ module ApipieDSL
         options[:desc] = desc_or_options
       end
 
-      if retobj_or_options.is_a?(Hash)
+      case retobj_or_options
+      when Hash
         options.merge!(retobj_or_options)
-      elsif retobj_or_options.is_a?(Symbol)
+      when Symbol
         options[:param_group] = retobj_or_options
       else
         options[:object_of] ||= retobj_or_options
@@ -414,7 +415,7 @@ module ApipieDSL
       def self.update_method_desc(method_desc, dsl_data)
         method_desc.full_description = dsl_data[:description] || method_desc.full_description
         method_desc.short_description = dsl_data[:short_description] || method_desc.short_description
-        if dsl_data[:meta]&.is_a?(Hash)
+        if dsl_data[:meta].is_a?(Hash)
           method_desc.metadata&.merge!(dsl_data[:meta])
         else
           method_desc.metadata = dsl_data[:meta]
@@ -454,9 +455,10 @@ module ApipieDSL
     end
 
     def apipie(context = :method, desc_or_options = nil, options = {}, &block)
-      if desc_or_options.is_a?(Hash)
+      case desc_or_options
+      when Hash
         options = options.merge(desc_or_options)
-      elsif desc_or_options.is_a?(String)
+      when String
         options[:desc] = desc_or_options
       end
       options[:name] ||= context.to_s
@@ -507,9 +509,10 @@ module ApipieDSL
     private
 
     def prepare_delegatee(scope, desc_or_options, options, &block)
-      if desc_or_options.is_a?(Hash)
+      case desc_or_options
+      when Hash
         options = options.merge(desc_or_options)
-      elsif desc_or_options.is_a?(String)
+      when String
         options[:desc] = desc_or_options
       end
 
@@ -528,9 +531,10 @@ module ApipieDSL
     include ApipieDSL::Delegatable
 
     def apipie(context = :method, desc_or_options = nil, options = {}, &block)
-      if desc_or_options.is_a?(Hash)
+      case desc_or_options
+      when Hash
         options = options.merge(desc_or_options)
-      elsif desc_or_options.is_a?(String)
+      when String
         options[:desc] = desc_or_options
       end
       options[:name] ||= context.to_s

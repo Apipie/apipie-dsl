@@ -17,6 +17,7 @@ module ApipieDSL
         BaseValidator.find(@param_description, @argument.constantize, @options, @block)
       end
     end
+
     # To create a new validator, inherit from ApipieDSL::Validator::BaseValidator
     # and implement class method 'build' and instance method 'validate'
     class BaseValidator
@@ -49,6 +50,7 @@ module ApipieDSL
       end
 
       def self.inherited(subclass)
+        super(subclass)
         @validators ||= []
         @validators.unshift(subclass)
       end
@@ -325,9 +327,7 @@ module ApipieDSL
         return false unless value.is_a?(Hash)
 
         @hash_params&.each do |name, param|
-          if ApipieDSL.configuration.validate_value?
-            param.validate(value[name]) if value.key?(name)
-          end
+          param.validate(value[name]) if ApipieDSL.configuration.validate_value? && value.key?(name)
         end
         true
       end

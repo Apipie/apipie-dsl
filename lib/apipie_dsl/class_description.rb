@@ -23,7 +23,7 @@ module ApipieDSL
       @full_description = ApipieDSL.markup_to_html(dsl_data[:description]) if dsl_data[:description]
       @short_description = dsl_data[:short_description] || @short_description
       @tag_list = dsl_data[:tag_list]
-      if dsl_data[:meta]&.is_a?(Hash)
+      if dsl_data[:meta].is_a?(Hash)
         @metadata&.merge!(dsl_data[:meta])
       elsif dsl_data[:meta]
         @metadata = dsl_data[:meta]

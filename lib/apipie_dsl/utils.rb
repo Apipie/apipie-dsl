@@ -60,18 +60,7 @@ module ApipieDSL
     end
   end
 end
-if RUBY_VERSION < '2.5.0'
-  class Hash
-    def transform_keys
-      result = {}
-      each do |key, value|
-        new_key = yield key
-        result[new_key] = value
-      end
-      result
-    end
-  end
-end
+
 if defined? Rails
   class Module
     # https://github.com/rails/rails/pull/35035

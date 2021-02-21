@@ -17,6 +17,15 @@ Style/FrozenStringLiteralComment:
   Exclude:
     - 'bin/*'
 
+Metrics/ParameterLists:
+  Enabled: false
+
+Metrics/ModuleLength:
+  Enabled: false
+
+Style/OptionalBooleanParameter:
+  Enabled: false
+
 Metrics/ClassLength:
   Exclude:
     - 'test/**/*'

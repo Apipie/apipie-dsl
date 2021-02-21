@@ -21,8 +21,8 @@ module ApipieDSL
         base_paths.unshift("#{Rails.root}/app/views/apipie_dsl/apipie_dsls") if File.directory?("#{Rails.root}/app/views/apipie_dsl/apipie_dsls")
       end
       layouts_paths = [File.expand_path('../../app/views/layouts', __dir__)]
-      if ApipieDSL.configuration.rails?
-        layouts_paths.unshift("#{Rails.root}/app/views/layouts") if File.directory?("#{Rails.root}/app/views/layouts/apipie_dsl")
+      if ApipieDSL.configuration.rails? && File.directory?("#{Rails.root}/app/views/layouts/apipie_dsl")
+        layouts_paths.unshift("#{Rails.root}/app/views/layouts")
       end
       paths = ActionView::PathSet.new(base_paths + layouts_paths)
       @renderer = ActionView::Base.new(paths, {})
