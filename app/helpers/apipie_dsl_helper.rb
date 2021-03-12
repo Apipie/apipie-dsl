@@ -65,6 +65,8 @@ module ApipieDslHelper
       "\"\""
     when Symbol
       ":#{default}"
+    when String
+      "\"#{default}\""
     else
       default
     end

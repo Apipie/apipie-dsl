@@ -1,4 +1,4 @@
-<% @doc[:classes].sort_by(&:first).each do |key, klass| %>
+<% @doc[:classes].sort_by { |id, c| c[:name] }.each do |key, klass| %>
   <% next unless klass[:show] %>
   <h4><a href='#<%= key %>'><%= klass[:name] %></a></h4>
   <ul>
@@ -18,7 +18,7 @@
 
 <hr>
 
-<% @doc[:classes].sort_by(&:first).each do |key, klass| %>
+<% @doc[:classes].sort_by { |id, c| c[:name] }.each do |key, klass| %>
   <% next unless klass[:show] %>
   <ul class='breadcrumb'  id='<%= key %>'>
     <li><a href='#'><%= @doc[:name] %></a><span class='divider'>/</span></li>

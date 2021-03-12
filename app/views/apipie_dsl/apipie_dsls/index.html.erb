@@ -14,7 +14,7 @@
 
 <h1 class='page-header'><%= t('apipie_dsl.classes') %></h1>
 
-<% @doc[:classes].each_value do |klass| %>
+<% @doc[:classes].sort_by { |id, c| c[:name] }.each do |id, klass| %>
   <% next unless klass[:show] && in_section?(@section, klass[:id]) %>
   <h2>
     <a href='<%= klass[:doc_url] %><%= @doc[:link_extension] %>'>
