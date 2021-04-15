@@ -98,8 +98,8 @@ module ApipieDSL
         full_description: ApipieDSL.translate(@full_description, lang),
         version: version,
         metadata: @metadata,
-        properties: @properties.map { |prop_desc| prop_desc.docs(section, lang) },
-        methods: methods,
+        properties: @properties.map { |prop_desc| prop_desc.docs(section, lang) }.sort_by { |p| p[:name] },
+        methods: methods.sort_by { |m| m[:name] },
         deprecated: @deprecated,
         show: @show
       }
