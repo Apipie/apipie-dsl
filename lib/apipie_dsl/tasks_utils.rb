@@ -25,7 +25,8 @@ module ApipieDSL
         layouts_paths.unshift("#{Rails.root}/app/views/layouts")
       end
       paths = ActionView::PathSet.new(base_paths + layouts_paths)
-      @renderer = ActionView::Base.new(paths, {})
+      lookup_context = ActionView::LookupContext.new(paths)
+      @renderer = ActionView::Base.with_empty_template_cache.new(lookup_context, {}, nil)
       @renderer.singleton_class.send(:include, ::ApipieDslHelper)
       @renderer
     end
