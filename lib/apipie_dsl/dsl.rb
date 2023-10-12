@@ -466,7 +466,7 @@ module ApipieDSL
       block = proc {} unless block_given?
 
       delegatee = Delegatee.instance_for(self).with(&block)
-      delegatee.short(options[:desc])
+      delegatee.short(options[:desc] || ApipieDSL.configuration.default_class_description&.call(self))
       # Don't eval the block, since it will be evaluated after method is defined
       return if context == :method
 
