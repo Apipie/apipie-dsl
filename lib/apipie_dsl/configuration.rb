@@ -10,6 +10,7 @@ module ApipieDSL
                   :use_cache, :app_info, :help_layout, :rails
     attr_writer   :validate_value, :ignored, :reload_dsl, :default_section,
                   :dsl_classes_matchers, :cache_dir
+    attr_reader   :default_class_description
 
     alias_method :validate?, :validate
     alias_method :class_full_names?, :class_full_names
@@ -50,6 +51,8 @@ module ApipieDSL
     end
 
     def reload_dsl?
+      return @reload_dsl unless @reload_dsl.nil?
+
       @reload_dsl = if rails?
                       Rails.env.development?
                     else
@@ -60,6 +63,12 @@ module ApipieDSL
 
     def default_section
       @default_section || @sections.first
+    end
+
+    def default_class_description=(desc_proc)
+      raise ConfigurationError.new('Default class description must be a proc returning a string') unless desc_proc.is_a?(Proc)
+
+      @default_class_description = desc_proc
     end
 
     def initialize
@@ -87,6 +96,7 @@ module ApipieDSL
       @sections = ['all']
       @default_section = nil
       @rails = true
+      @reload_dsl = nil
     end
   end
 end
