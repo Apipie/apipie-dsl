@@ -6,17 +6,15 @@
         <a href='<%= meth[:doc_url] %><%= link_extension %>'> >>> </a>
       </div>
       <div>
-        <% (meth[:signature] || [method_signature(meth)]).each do |signature| %>
-          <h2>
+        <h2>
+          <% (meth[:signature] || [method_signature(meth)]).each do |signature| %>
             <a href='#description-<%= escaped_method_name(meth[:name], escaping: '_') %>'
-             class='accordion-toggle'
-             data-toggle='collapse'
-             data-parent='#meth-accordion'>
+              class='accordion-toggle'
+              data-toggle='collapse'
+              data-parent='#meth-accordion'>
               <%= signature %>
             </a>
-          </h2>
-        <% end %>
-        <h2>
+          <% end %>
           <% if meth[:deprecated] %>
             <code>DEPRECATED</code>
           <% end %>
