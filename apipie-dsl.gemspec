@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
 
   spec.summary       = 'Ruby DSL documentation tool'
   spec.description   = 'Ruby DSL documentation tool'
-  spec.homepage      = 'https://github.com/ofedoren/apipie-dsl'
+  spec.homepage      = 'https://github.com/Apipie/apipie-dsl'
   spec.license       = 'MIT'
 
   spec.files         = Dir['{app,lib,doc,test}/**/*', '*-LICENSE*', 'README*']
