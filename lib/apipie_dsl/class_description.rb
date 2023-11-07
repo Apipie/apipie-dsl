@@ -90,11 +90,12 @@ module ApipieDSL
                 else
                   [@methods[method_name.to_sym].docs(section, lang)]
                 end
+      short_desc = @short_description || ApipieDSL.configuration.default_class_description&.call(@klass)
       {
         id: id,
         name: @name,
         doc_url: doc_url(section),
-        short_description: ApipieDSL.translate(@short_description, lang),
+        short_description: ApipieDSL.translate(short_desc, lang),
         full_description: ApipieDSL.translate(@full_description, lang),
         version: version,
         metadata: @metadata,
