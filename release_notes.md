@@ -1,5 +1,9 @@
 Release notes
 =============
+### 2.6.1 (2023-11-07)
+* Postpone default description evaluation ([PR #13](https://github.com/Apipie/apipie-dsl/pull/13))
+* Update homepage in gemspec ([PR #12](https://github.com/Apipie/apipie-dsl/pull/12))
+
 ### 2.6.0 (2023-10-12)
 * Fix rel-eng
 * Fix huge gaps in methods index page
