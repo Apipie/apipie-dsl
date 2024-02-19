@@ -440,6 +440,27 @@ module ApipieDSL
       end
     end
 
+    class KWRestValidator < BaseValidator
+      def self.build(param_description, argument, _options, _block)
+        return unless %i[kwrest kwlist kwsplat].include?(argument)
+
+        new(param_description)
+      end
+
+      def validate(_value)
+        # In **kwrest param we don't care about passed values.
+        true
+      end
+
+      def description
+        'Must be a list of key: value'
+      end
+
+      def expected_type
+        'kwlist'
+      end
+    end
+
     class NestedValidator < BaseValidator
       def initialize(param_description, argument, param_group)
         super(param_description)

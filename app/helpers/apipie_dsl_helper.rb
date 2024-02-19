@@ -83,6 +83,8 @@ module ApipieDslHelper
       when 'optional'
         if param[:expected_type] == 'list'
           "*#{param[:name]}"
+        elsif param[:expected_type] == 'kwlist'
+          "**#{param[:name]}"
         else
           "#{param[:name]} = #{default}"
         end
