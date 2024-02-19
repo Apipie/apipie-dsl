@@ -130,6 +130,14 @@ module ApipieDSL
     alias_method :splat, :list
     alias_method :rest, :list
 
+    def kwlist(name, desc_or_options = nil, options = {})
+      options[:type] = :optional
+      options[:default] ||= 'empty key: value list'
+      param(name, :kwrest, desc_or_options, options)
+    end
+    alias_method :kwsplat, :kwlist
+    alias_method :kwrest, :kwlist
+
     def define_param_group(name, &block)
       ApipieDSL.define_param_group(class_scope, name, &block)
     end
