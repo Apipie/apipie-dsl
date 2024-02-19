@@ -1,5 +1,8 @@
 Release notes
 =============
+### 2.6.2 (2024-02-19)
+* Add macro to document **kwargs param ([PR #14](https://github.com/Apipie/apipie-dsl/pull/14))
+
 ### 2.6.1 (2023-11-07)
 * Postpone default description evaluation ([PR #13](https://github.com/Apipie/apipie-dsl/pull/13))
 * Update homepage in gemspec ([PR #12](https://github.com/Apipie/apipie-dsl/pull/12))
