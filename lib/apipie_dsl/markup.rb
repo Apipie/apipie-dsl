@@ -3,6 +3,12 @@
 module ApipieDSL
   module Markup
     class RDoc
+
+      def initialize
+        require 'rdoc'
+        require 'rdoc/markup/to_html'
+      end
+
       def to_html(text)
         rdoc.convert(text)
       end
@@ -10,14 +16,11 @@ module ApipieDSL
       private
 
       def rdoc
-        @rdoc ||= begin
-          require 'rdoc'
-          require 'rdoc/markup/to_html'
-          if Gem::Version.new(::RDoc::VERSION) < Gem::Version.new('4.0.0')
-            ::RDoc::Markup::ToHtml.new()
-          else
-            ::RDoc::Markup::ToHtml.new(::RDoc::Options.new)
-          end
+        rdoc_version = Gem::Version.new(::RDoc::VERSION)
+        if rdoc_version >= Gem::Version.new('4.0.0') && rdoc_version < Gem::Version.new('8.0.0')
+          ::RDoc::Markup::ToHtml.new(::RDoc::Options.new)
+        else
+          ::RDoc::Markup::ToHtml.new()
         end
       end
     end
