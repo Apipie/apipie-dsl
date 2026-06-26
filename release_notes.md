@@ -1,5 +1,8 @@
 Release notes
 =============
+### 2.6.3 (2026-06-26)
+* Make rdoc.to_html compatible with rdoc-8.0 ([PR #15](https://github.com/Apipie/apipie-dsl/pull/15))
+
 ### 2.6.2 (2024-02-19)
 * Add macro to document **kwargs param ([PR #14](https://github.com/Apipie/apipie-dsl/pull/14))
 
